@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Futu Stock Analysis Library</title>
+  <style>
+    :root {
+      --bg: #f4f5f2;
+      --panel: #ffffff;
+      --ink: #1a1d18;
+      --muted: #5c6358;
+      --line: #d8ddd4;
+      --accent: #2f5d50;
+      --accent-soft: #e7f0ec;
+      --warn: #8a5a18;
+      --danger: #8b3a3a;
+      --ok: #2f5d50;
+      --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+      --sans: "Source Sans 3", "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, #e8efe9 0%, transparent 55%),
+        radial-gradient(900px 400px at 100% 0%, #efeae2 0%, transparent 50%),
+        var(--bg);
+      min-height: 100vh;
+    }
+    .shell {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    aside {
+      border-right: 1px solid var(--line);
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(8px);
+      padding: 28px 18px 40px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+    }
+    main {
+      padding: 28px 28px 64px;
+    }
+    .brand {
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    h1 {
+      font-size: 22px;
+      margin: 0 0 8px;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+    .sub {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 0 0 22px;
+      line-height: 1.45;
+    }
+    .search {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font: inherit;
+      margin-bottom: 18px;
+      background: #fff;
+    }
+    .search:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent); }
+    .folder {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      border: 0;
+      background: transparent;
+      text-align: left;
+      padding: 10px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font: inherit;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .folder:hover { background: var(--accent-soft); }
+    .folder.active { background: var(--accent); color: #fff; }
+    .folder-name { font-size: 14px; font-weight: 600; }
+    .folder-count {
+      font-size: 12px;
+      min-width: 22px;
+      text-align: center;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.06);
+    }
+    .folder.active .folder-count { background: rgba(255,255,255,0.22); }
+    .hint {
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+      padding: 0 6px;
+    }
+    .hint code {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: #efece6;
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .toolbar h2 { margin: 0; font-size: 18px; }
+    .toolbar p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px 18px 14px;
+    }
+    .card.hidden { display: none; }
+    .card-head h2 {
+      margin: 0 0 6px;
+      font-size: 17px;
+      line-height: 1.3;
+    }
+    .title-link { color: inherit; text-decoration: none; }
+    .title-link:hover { color: var(--accent); text-decoration: underline; }
+    .open-row { margin: 0 0 8px; }
+    .btn {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff !important;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 8px;
+      text-decoration: none !important;
+    }
+    .btn:hover { filter: brightness(1.05); }
+    .canvas-note {
+      grid-column: 1 / -1;
+      font-size: 11px;
+      color: var(--warn);
+    }
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      align-items: baseline;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .meta-row .k {
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 700;
+      font-size: 10px;
+      color: #7a8276;
+    }
+    .meta-row code {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink);
+    }
+    .summary {
+      margin: 10px 0 12px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #2b3128;
+    }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+    .tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .card h3 {
+      margin: 12px 0 6px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    .arts { list-style: none; padding: 0; margin: 0; }
+    .art {
+      display: grid;
+      grid-template-columns: minmax(120px, 180px) 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 8px 0;
+      border-top: 1px solid #eef1ea;
+      font-size: 13px;
+    }
+    .art a { color: var(--accent); font-weight: 650; text-decoration: none; }
+    .art a:hover { text-decoration: underline; }
+    .art code {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+    .badge.ok { background: #e5f2eb; color: var(--ok); }
+    .badge.missing { background: #f6e8e8; color: var(--danger); }
+    .folder-blurb {
+      display: none;
+      margin-bottom: 14px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+    .folder-blurb.visible { display: block; }
+    .folder-blurb h2 { margin: 0 0 4px; font-size: 16px; }
+    .folder-blurb p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
+    .empty {
+      display: none;
+      padding: 28px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.6);
+    }
+    .empty.visible { display: block; }
+    @media (max-width: 860px) {
+      .shell { grid-template-columns: 1fr; }
+      aside {
+        position: relative;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .art { grid-template-columns: 1fr; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside>
+      <div class="brand">Research desk</div>
+      <h1>Futu Stock Analysis Library</h1>
+      <p class="sub">Catalog of studies, dashboards, and Cursor canvases. Updated 2026-11-21.</p>
+      <input class="search" id="q" type="search" placeholder="Search title, tags, summary…" />
+      <nav id="folders">
+        <button type="button" class="folder active" data-folder="__all__"><span class="folder-name">All analyses</span><span class="folder-count">57</span></button><button type="button" class="folder" data-folder="tight-breakouts"><span class="folder-name">Tight Breakouts</span><span class="folder-count">1</span></button><button type="button" class="folder" data-folder="soxx"><span class="folder-name">SOXX / Semiconductors</span><span class="folder-count">5</span></button><button type="button" class="folder" data-folder="chip-crash"><span class="folder-name">Chip Names · Crash Aftermath</span><span class="folder-count">3</span></button><button type="button" class="folder" data-folder="event-studies"><span class="folder-name">Event Studies</span><span class="folder-count">8</span></button><button type="button" class="folder" data-folder="market-ops"><span class="folder-name">Market Ops &amp; Breadth</span><span class="folder-count">4</span></button><button type="button" class="folder" data-folder="macros"><span class="folder-name">Macro Overlays</span><span class="folder-count">5</span></button><button type="button" class="folder" data-folder="hk-dividend"><span class="folder-name">HK Dividend Equity</span><span class="folder-count">31</span></button>
+      </nav>
+      <p class="hint">
+        Prefer <b>Open report page</b> — those are normal browser pages with charts/tables.
+        Cursor canvas links only render inside Cursor; opening the <code>.tsx</code> file shows source code.<br/><br/>
+        Rebuild after new studies:<br/>
+        <code>python3 build_analysis_library.py --open</code>
+      </p>
+    </aside>
+    <main>
+      <div class="toolbar">
+        <div>
+          <h2 id="view-title">All analyses</h2>
+          <p id="view-sub">57 recorded studies</p>
+        </div>
+      </div>
+      <section class="folder-blurb" data-folder-blurb="tight-breakouts"><h2>Tight Breakouts</h2><p>Weekly journal of observed breakouts. Track stop distance, volume, and 5d/10d/1m/3m follow-through. Target: SL &lt; 8% with volume.</p></section><section class="folder-blurb" data-folder-blurb="soxx"><h2>SOXX / Semiconductors</h2><p>Gap-fill studies, unfilled gap-ups, MA200 filter, and Jul’24 vs Jun’26 path analog.</p></section><section class="folder-blurb" data-folder-blurb="chip-crash"><h2>Chip Names · Crash Aftermath</h2><p>Peak-to-trough ≥40% inside ~1 month: forward returns from the trough for INTC, MU, and peers.</p></section><section class="folder-blurb" data-folder-blurb="event-studies"><h2>Event Studies</h2><p>Forward-return studies around market signals (divergence, rallies, banks, FX/yields, geopolitics).</p></section><section class="folder-blurb" data-folder-blurb="market-ops"><h2>Market Ops &amp; Breadth</h2><p>Daily breadth, weekly screener reports, the live HTML dashboard, and the momentum pullback backtest.</p></section><section class="folder-blurb" data-folder-blurb="macros"><h2>Macro Overlays</h2><p>Cross-asset studies: JPY carry, Treasury yields, late-cycle banks.</p></section><section class="folder-blurb" data-folder-blurb="hk-dividend"><h2>HK Dividend Equity</h2><p>High-yield equity research for Hong Kong listed names (telcos, utilities, REITs).</p></section>
+      <div class="grid" id="cards">
+        
+            <article class="card" data-folder="tight-breakouts" data-id="tight-breakout-journal"
+                     data-search="tight breakout journal living weekly log of good breakouts (bo date, bo point, stop). scores risk vs 8% cap, bo-day volume vs 20d average, stop hits, and 5d/10d/1m/3m returns from the bo point. week of 2026-10-02: mxl, syna, azta — all tight with volume. breakout journal volume stop-loss">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="breakout_dashboard.html" target="_blank" rel="noopener">Tight Breakout Journal</a></h2><div class="open-row"><a class="btn" href="breakout_dashboard.html" target="_blank" rel="noopener">Open dashboard</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-03</span>
+                    <span class="k">Folder</span><span>tight-breakouts</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Living weekly log of good breakouts (BO date, BO point, stop). Scores risk vs 8% cap, BO-day volume vs 20d average, stop hits, and 5d/10d/1m/3m returns from the BO point. Week of 2026-10-02: MXL, SYNA, AZTA — all tight with volume.</p>
+              <div class="tags"><span class="tag">breakout</span><span class="tag">journal</span><span class="tag">volume</span><span class="tag">stop-loss</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>breakout_tracker.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="breakout_dashboard.html" target="_blank" rel="noopener">Open dashboard</a><code>output/breakout_dashboard.html</code><span class="badge ok">available</span></li><li class="art ok"><span target="_blank" rel="noopener">Journal Excel (your input)</span><code>breakouts/breakout_journal.xlsx</code><span class="badge ok">available</span></li><li class="art ok"><a href="breakouts_tracked.csv" target="_blank" rel="noopener">Tracked snapshot</a><code>output/breakouts_tracked.csv</code><span class="badge ok">available</span></li><li class="art ok"><span target="_blank" rel="noopener">Cursor canvas (IDE only)</span><code>canvases/tight-breakout-journal.canvas.tsx</code><span class="badge ok">available</span><span class="canvas-note">Opens as source code outside Cursor — use the report page instead</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="0941-china-mobile-dividend"
+                     data-search="0941.hk china mobile — dividend research core hk high-yield name: ~6.7–6.9% yield, fy25 dps hk$5.27 (payout 75%), rising dps with stable-to-rising fy26 guidance, net-cash balance sheet, beta 0.26. near-term earnings soft (vat + legacy telecom); digital/ai offset. keep on high-yield shortlist as income hold. 0941 china mobile dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/0941-china-mobile-dividend.html" target="_blank" rel="noopener">0941.HK China Mobile — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/0941-china-mobile-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Core HK high-yield name: ~6.7–6.9% yield, FY25 DPS HK$5.27 (payout 75%), rising DPS with stable-to-rising FY26 guidance, net-cash balance sheet, beta 0.26. Near-term earnings soft (VAT + legacy telecom); digital/AI offset. Keep on high-yield shortlist as income hold.</p>
+              <div class="tags"><span class="tag">0941</span><span class="tag">China Mobile</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>build_analysis_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/0941-china-mobile-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/0941-china-mobile-dividend.html</code><span class="badge ok">available</span></li><li class="art ok"><span target="_blank" rel="noopener">Cursor canvas (IDE only)</span><code>canvases/0941-china-mobile-dividend.canvas.tsx</code><span class="badge ok">available</span><span class="canvas-note">Opens as source code outside Cursor — use the report page instead</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="hk-dividend-pack"
+                     data-search="hk dividend pack — ranked screen yahoo indicated-yield ranking of 29 hk names from the dividend screen, with a linked research page per ticker. hk dividend yield screen">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/hk-dividend-pack.html" target="_blank" rel="noopener">HK Dividend Pack — Ranked Screen</a></h2><div class="open-row"><a class="btn" href="reports/hk-dividend-pack.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Yahoo indicated-yield ranking of 29 HK names from the dividend screen, with a linked research page per ticker.</p>
+              <div class="tags"><span class="tag">HK</span><span class="tag">dividend</span><span class="tag">yield</span><span class="tag">screen</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/hk-dividend-pack.html" target="_blank" rel="noopener">Open ranked screen</a><code>output/reports/hk-dividend-pack.html</code><span class="badge ok">available</span></li><li class="art ok"><a href="hk_dividend_pack.json" target="_blank" rel="noopener">Yahoo snapshot JSON</a><code>output/hk_dividend_pack.json</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="0857-petrochina-dividend"
+                     data-search="0857.hk petrochina — dividend research indicated yield 6.2%, payout 49%, p/e 8.5x, oil &amp; gas integrated. 0857 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/0857-petrochina-dividend.html" target="_blank" rel="noopener">0857.HK PETROCHINA — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/0857-petrochina-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 6.2%, payout 49%, P/E 8.5x, Oil &amp; Gas Integrated.</p>
+              <div class="tags"><span class="tag">0857</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/0857-petrochina-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/0857-petrochina-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="3968-cm-bank-dividend"
+                     data-search="3968.hk cm bank — dividend research indicated yield 8.7%, payout 34%, p/e 7.5x, banks - regional. 3968 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/3968-cm-bank-dividend.html" target="_blank" rel="noopener">3968.HK CM BANK — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/3968-cm-bank-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 8.7%, payout 34%, P/E 7.5x, Banks - Regional.</p>
+              <div class="tags"><span class="tag">3968</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/3968-cm-bank-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/3968-cm-bank-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="0728-china-telecom-dividend"
+                     data-search="0728.hk china telecom — dividend research indicated yield 6.4%, payout 85%, p/e 12.0x, telecom services. 0728 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/0728-china-telecom-dividend.html" target="_blank" rel="noopener">0728.HK CHINA TELECOM — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/0728-china-telecom-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 6.4%, payout 85%, P/E 12.0x, Telecom Services.</p>
+              <div class="tags"><span class="tag">0728</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/0728-china-telecom-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/0728-china-telecom-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="2328-picc-p-c-dividend"
+                     data-search="2328.hk picc p&amp;c — dividend research indicated yield 4.8%, payout 31%, p/e 6.3x, insurance - property &amp; casualty. 2328 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/2328-picc-p-c-dividend.html" target="_blank" rel="noopener">2328.HK PICC P&amp;C — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/2328-picc-p-c-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 4.8%, payout 31%, P/E 6.3x, Insurance - Property &amp; Casualty.</p>
+              <div class="tags"><span class="tag">2328</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/2328-picc-p-c-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/2328-picc-p-c-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="6690-haier-smarthome-dividend"
+                     data-search="6690.hk haier smarthome — dividend research indicated yield 6.5%, payout 14%, p/e 8.9x, furnishings, fixtures &amp; appliances. 6690 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/6690-haier-smarthome-dividend.html" target="_blank" rel="noopener">6690.HK HAIER SMARTHOME — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/6690-haier-smarthome-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 6.5%, payout 14%, P/E 8.9x, Furnishings, Fixtures &amp; Appliances.</p>
+              <div class="tags"><span class="tag">6690</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/6690-haier-smarthome-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/6690-haier-smarthome-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="0762-china-unicom-dividend"
+                     data-search="0762.hk china unicom — dividend research indicated yield 8.5%, payout 80%, p/e 8.9x, telecom services. 0762 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/0762-china-unicom-dividend.html" target="_blank" rel="noopener">0762.HK CHINA UNICOM — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/0762-china-unicom-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 8.5%, payout 80%, P/E 8.9x, Telecom Services.</p>
+              <div class="tags"><span class="tag">0762</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/0762-china-unicom-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/0762-china-unicom-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="0788-china-tower-dividend"
+                     data-search="0788.hk china tower — dividend research indicated yield 4.9%, payout 59%, p/e 9.9x, telecom services. 0788 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/0788-china-tower-dividend.html" target="_blank" rel="noopener">0788.HK CHINA TOWER — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/0788-china-tower-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 4.9%, payout 59%, P/E 9.9x, Telecom Services.</p>
+              <div class="tags"><span class="tag">0788</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/0788-china-tower-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/0788-china-tower-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="3606-fuyao-glass-dividend"
+                     data-search="3606.hk fuyao glass — dividend research indicated yield 4.6%, payout 64%, p/e 14.1x, auto parts. 3606 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/3606-fuyao-glass-dividend.html" target="_blank" rel="noopener">3606.HK FUYAO GLASS — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/3606-fuyao-glass-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 4.6%, payout 64%, P/E 14.1x, Auto Parts.</p>
+              <div class="tags"><span class="tag">3606</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/3606-fuyao-glass-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/3606-fuyao-glass-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="1972-swireproperties-dividend"
+                     data-search="1972.hk swireproperties — dividend research indicated yield 4.8%, payout 2%, p/e 42.0x, real estate services. 1972 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/1972-swireproperties-dividend.html" target="_blank" rel="noopener">1972.HK SWIREPROPERTIES — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/1972-swireproperties-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 4.8%, payout 2%, P/E 42.0x, Real Estate Services.</p>
+              <div class="tags"><span class="tag">1972</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/1972-swireproperties-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/1972-swireproperties-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="1913-prada-dividend"
+                     data-search="1913.hk prada — dividend research indicated yield 4.0%, payout 53%, p/e 13.1x, luxury goods. 1913 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/1913-prada-dividend.html" target="_blank" rel="noopener">1913.HK PRADA — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/1913-prada-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 4.0%, payout 53%, P/E 13.1x, Luxury Goods.</p>
+              <div class="tags"><span class="tag">1913</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/1913-prada-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/1913-prada-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="3618-cqrc-bank-dividend"
+                     data-search="3618.hk cqrc bank — dividend research indicated yield 5.7%, payout 29%, p/e 4.9x, banks - regional. 3618 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/3618-cqrc-bank-dividend.html" target="_blank" rel="noopener">3618.HK CQRC BANK — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/3618-cqrc-bank-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 5.7%, payout 29%, P/E 4.9x, Banks - Regional.</p>
+              <div class="tags"><span class="tag">3618</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/3618-cqrc-bank-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/3618-cqrc-bank-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="0168-tsingtao-br-500-dividend"
+                     data-search="0168.hk tsingtao br-500 — dividend research indicated yield 6.7%, payout 69%, p/e 9.9x, beverages - brewers. 0168 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/0168-tsingtao-br-500-dividend.html" target="_blank" rel="noopener">0168.HK TSINGTAO BR-500 — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/0168-tsingtao-br-500-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 6.7%, payout 69%, P/E 9.9x, Beverages - Brewers.</p>
+              <div class="tags"><span class="tag">0168</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/0168-tsingtao-br-500-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/0168-tsingtao-br-500-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="3998-bosideng-dividend"
+                     data-search="3998.hk bosideng — dividend research indicated yield 7.8%, payout 75%, p/e 9.8x, apparel manufacturing. 3998 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/3998-bosideng-dividend.html" target="_blank" rel="noopener">3998.HK BOSIDENG — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/3998-bosideng-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 7.8%, payout 75%, P/E 9.8x, Apparel Manufacturing.</p>
+              <div class="tags"><span class="tag">3998</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/3998-bosideng-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/3998-bosideng-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="0598-sinotrans-dividend"
+                     data-search="0598.hk sinotrans — dividend research indicated yield 7.5%, payout 56%, p/e 7.1x, integrated freight &amp; logistics. 0598 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/0598-sinotrans-dividend.html" target="_blank" rel="noopener">0598.HK SINOTRANS — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/0598-sinotrans-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 7.5%, payout 56%, P/E 7.1x, Integrated Freight &amp; Logistics.</p>
+              <div class="tags"><span class="tag">0598</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/0598-sinotrans-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/0598-sinotrans-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="3360-fe-horizon-dividend"
+                     data-search="3360.hk fe horizon — dividend research indicated yield 7.8%, payout 60%, p/e 6.4x, credit services. 3360 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/3360-fe-horizon-dividend.html" target="_blank" rel="noopener">3360.HK FE HORIZON — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/3360-fe-horizon-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 7.8%, payout 60%, P/E 6.4x, Credit Services.</p>
+              <div class="tags"><span class="tag">3360</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/3360-fe-horizon-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/3360-fe-horizon-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="2368-eagle-nice-dividend"
+                     data-search="2368.hk eagle nice — dividend research indicated yield 9.0%, payout 93%, p/e 9.7x, apparel manufacturing. 2368 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/2368-eagle-nice-dividend.html" target="_blank" rel="noopener">2368.HK EAGLE NICE — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/2368-eagle-nice-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 9.0%, payout 93%, P/E 9.7x, Apparel Manufacturing.</p>
+              <div class="tags"><span class="tag">2368</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/2368-eagle-nice-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/2368-eagle-nice-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="0874-baiyunshan-ph-dividend"
+                     data-search="0874.hk baiyunshan ph — dividend research indicated yield 6.5%, payout 54%, p/e 7.1x, medical distribution. 0874 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/0874-baiyunshan-ph-dividend.html" target="_blank" rel="noopener">0874.HK BAIYUNSHAN PH — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/0874-baiyunshan-ph-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 6.5%, payout 54%, P/E 7.1x, Medical Distribution.</p>
+              <div class="tags"><span class="tag">0874</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/0874-baiyunshan-ph-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/0874-baiyunshan-ph-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="2356-dahsing-banking-dividend"
+                     data-search="2356.hk dahsing banking — dividend research indicated yield 5.6%, payout 45%, p/e 8.1x, banks - regional. 2356 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/2356-dahsing-banking-dividend.html" target="_blank" rel="noopener">2356.HK DAHSING BANKING — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/2356-dahsing-banking-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 5.6%, payout 45%, P/E 8.1x, Banks - Regional.</p>
+              <div class="tags"><span class="tag">2356</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/2356-dahsing-banking-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/2356-dahsing-banking-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="0142-first-pacific-dividend"
+                     data-search="0142.hk first pacific — dividend research indicated yield 5.4%, payout 26%, p/e 4.5x, packaged foods. 0142 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/0142-first-pacific-dividend.html" target="_blank" rel="noopener">0142.HK FIRST PACIFIC — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/0142-first-pacific-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 5.4%, payout 26%, P/E 4.5x, Packaged Foods.</p>
+              <div class="tags"><span class="tag">0142</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/0142-first-pacific-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/0142-first-pacific-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="0564-zczl-dividend"
+                     data-search="0564.hk zczl — dividend research indicated yield 12.7%, payout 64%, p/e 4.9x, farm &amp; heavy construction machinery. 0564 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/0564-zczl-dividend.html" target="_blank" rel="noopener">0564.HK ZCZL — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/0564-zczl-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 12.7%, payout 64%, P/E 4.9x, Farm &amp; Heavy Construction Machinery.</p>
+              <div class="tags"><span class="tag">0564</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/0564-zczl-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/0564-zczl-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="0440-dah-sing-dividend"
+                     data-search="0440.hk dah sing — dividend research indicated yield 5.7%, payout 43%, p/e 7.4x, banks - regional. 0440 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/0440-dah-sing-dividend.html" target="_blank" rel="noopener">0440.HK DAH SING — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/0440-dah-sing-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 5.7%, payout 43%, P/E 7.4x, Banks - Regional.</p>
+              <div class="tags"><span class="tag">0440</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/0440-dah-sing-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/0440-dah-sing-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="2669-china-ovs-ppt-dividend"
+                     data-search="2669.hk china ovs ppt — dividend research indicated yield 6.0%, payout 43%, p/e 7.1x, real estate services. 2669 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/2669-china-ovs-ppt-dividend.html" target="_blank" rel="noopener">2669.HK CHINA OVS PPT — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/2669-china-ovs-ppt-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 6.0%, payout 43%, P/E 7.1x, Real Estate Services.</p>
+              <div class="tags"><span class="tag">2669</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/2669-china-ovs-ppt-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/2669-china-ovs-ppt-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="0506-china-foods-dividend"
+                     data-search="0506.hk china foods — dividend research indicated yield 4.7%, payout 47%, p/e 9.6x, beverages - non-alcoholic. 0506 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/0506-china-foods-dividend.html" target="_blank" rel="noopener">0506.HK CHINA FOODS — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/0506-china-foods-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 4.7%, payout 47%, P/E 9.6x, Beverages - Non-Alcoholic.</p>
+              <div class="tags"><span class="tag">0506</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/0506-china-foods-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/0506-china-foods-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="1523-plover-bay-tech-dividend"
+                     data-search="1523.hk plover bay tech — dividend research indicated yield 4.4%, payout 79%, p/e 20.0x, communication equipment. 1523 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/1523-plover-bay-tech-dividend.html" target="_blank" rel="noopener">1523.HK PLOVER BAY TECH — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/1523-plover-bay-tech-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 4.4%, payout 79%, P/E 20.0x, Communication Equipment.</p>
+              <div class="tags"><span class="tag">1523</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/1523-plover-bay-tech-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/1523-plover-bay-tech-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="3316-binjiang-ser-dividend"
+                     data-search="3316.hk binjiang ser — dividend research indicated yield 9.1%, payout 72%, p/e 7.9x, real estate services. 3316 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/3316-binjiang-ser-dividend.html" target="_blank" rel="noopener">3316.HK BINJIANG SER — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/3316-binjiang-ser-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 9.1%, payout 72%, P/E 7.9x, Real Estate Services.</p>
+              <div class="tags"><span class="tag">3316</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/3316-binjiang-ser-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/3316-binjiang-ser-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="0752-pico-far-east-dividend"
+                     data-search="0752.hk pico far east — dividend research indicated yield 6.8%, payout 42%, p/e 6.2x, advertising agencies. 0752 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/0752-pico-far-east-dividend.html" target="_blank" rel="noopener">0752.HK PICO FAR EAST — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/0752-pico-far-east-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 6.8%, payout 42%, P/E 6.2x, Advertising Agencies.</p>
+              <div class="tags"><span class="tag">0752</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/0752-pico-far-east-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/0752-pico-far-east-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="8371-tastegourmet-gp-dividend"
+                     data-search="8371.hk tastegourmet gp — dividend research indicated yield 8.5%, payout 52%, p/e 6.7x, restaurants. 8371 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/8371-tastegourmet-gp-dividend.html" target="_blank" rel="noopener">8371.HK TASTEGOURMET GP — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/8371-tastegourmet-gp-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 8.5%, payout 52%, P/E 6.7x, Restaurants.</p>
+              <div class="tags"><span class="tag">8371</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/8371-tastegourmet-gp-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/8371-tastegourmet-gp-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="0640-infinity-dev-dividend"
+                     data-search="0640.hk infinity dev — dividend research indicated yield 7.8%, payout 52%, p/e 5.9x, specialty chemicals. 0640 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/0640-infinity-dev-dividend.html" target="_blank" rel="noopener">0640.HK INFINITY DEV — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/0640-infinity-dev-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 7.8%, payout 52%, P/E 5.9x, Specialty Chemicals.</p>
+              <div class="tags"><span class="tag">0640</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/0640-infinity-dev-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/0640-infinity-dev-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="hk-dividend" data-id="2230-medialink-group-dividend"
+                     data-search="2230.hk medialink group — dividend research indicated yield 7.6%, payout 51%, p/e 6.4x, entertainment. 2230 dividend hk yield">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/2230-medialink-group-dividend.html" target="_blank" rel="noopener">2230.HK MEDIALINK GROUP — Dividend Research</a></h2><div class="open-row"><a class="btn" href="reports/2230-medialink-group-dividend.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-02</span>
+                    <span class="k">Folder</span><span>hk-dividend</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Indicated yield 7.6%, payout 51%, P/E 6.4x, Entertainment.</p>
+              <div class="tags"><span class="tag">2230</span><span class="tag">dividend</span><span class="tag">HK</span><span class="tag">yield</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>hk_dividend_reports.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/2230-medialink-group-dividend.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/2230-medialink-group-dividend.html</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="chip-crash" data-id="intc-crash-40pct-month"
+                     data-search="intc after ≥40% drop in ~1 month peak-to-trough ≥40% inside 30 sessions (5 episodes since 1980). from the trough: median +12% next month, +22% next year; +20% bounce often within ~1–5 weeks. full reclaim of the pre-crash peak is slow (median ~463 sessions). 2026-07-29 episode already bounced hard off the lows. intc crash drawdown recovery">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/intc-crash-40pct-month.html" target="_blank" rel="noopener">INTC After ≥40% Drop in ~1 Month</a></h2><div class="open-row"><a class="btn" href="reports/intc-crash-40pct-month.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-09-25</span>
+                    <span class="k">Folder</span><span>chip-crash</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Peak-to-trough ≥40% inside 30 sessions (5 episodes since 1980). From the trough: median +12% next month, +22% next year; +20% bounce often within ~1–5 weeks. Full reclaim of the pre-crash peak is slow (median ~463 sessions). 2026-07-29 episode already bounced hard off the lows.</p>
+              <div class="tags"><span class="tag">INTC</span><span class="tag">crash</span><span class="tag">drawdown</span><span class="tag">recovery</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>intc_crash_40pct_month.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/intc-crash-40pct-month.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/intc-crash-40pct-month.html</code><span class="badge ok">available</span></li><li class="art ok"><a href="intc_crash_40pct_month.json" target="_blank" rel="noopener">Summary JSON</a><code>output/intc_crash_40pct_month.json</code><span class="badge ok">available</span></li><li class="art ok"><a href="intc_crash_40pct_month_events.csv" target="_blank" rel="noopener">Events CSV</a><code>output/intc_crash_40pct_month_events.csv</code><span class="badge ok">available</span></li><li class="art ok"><span target="_blank" rel="noopener">Cursor canvas (IDE only)</span><code>canvases/intc-crash-40pct-month.canvas.tsx</code><span class="badge ok">available</span><span class="canvas-note">Opens as source code outside Cursor — use the report page instead</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="chip-crash" data-id="mu-crash-40pct-month"
+                     data-search="mu after ≥40% drop in ~1 month peak-to-trough ≥40% inside 30 sessions (20 episodes). from the trough: median +26% next month, +66% next year; +20% bounce median ~8 sessions. all 20 eventually reclaimed the prior peak (median ~207 sessions). recent 6m peak→trough ~−39% (just shy of the 40% cut) — not yet a formal episode. mu crash drawdown recovery">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/mu-crash-40pct-month.html" target="_blank" rel="noopener">MU After ≥40% Drop in ~1 Month</a></h2><div class="open-row"><a class="btn" href="reports/mu-crash-40pct-month.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-09-25</span>
+                    <span class="k">Folder</span><span>chip-crash</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Peak-to-trough ≥40% inside 30 sessions (20 episodes). From the trough: median +26% next month, +66% next year; +20% bounce median ~8 sessions. All 20 eventually reclaimed the prior peak (median ~207 sessions). Recent 6m peak→trough ~−39% (just shy of the 40% cut) — not yet a formal episode.</p>
+              <div class="tags"><span class="tag">MU</span><span class="tag">crash</span><span class="tag">drawdown</span><span class="tag">recovery</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>intc_crash_40pct_month.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/mu-crash-40pct-month.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/mu-crash-40pct-month.html</code><span class="badge ok">available</span></li><li class="art ok"><a href="mu_crash_40pct_month.json" target="_blank" rel="noopener">Summary JSON</a><code>output/mu_crash_40pct_month.json</code><span class="badge ok">available</span></li><li class="art ok"><a href="mu_crash_40pct_month_events.csv" target="_blank" rel="noopener">Events CSV</a><code>output/mu_crash_40pct_month_events.csv</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="chip-crash" data-id="qcom2000-mu2026-analog"
+                     data-search="qcom 2000 vs mu 2026 price analog peak-aligned melt-up rhymes (last 6m ~5.0× vs ~4.4×; level corr ~0.97) but day-to-day returns barely match (~0.08). 79 sessions after the peak mu is still ~72% of the high; qcom was already ~54% and still falling. full-year blow-off was much larger for qcom (26× vs 9.5×). qcom mu analog 2000">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/qcom2000-mu2026-analog.html" target="_blank" rel="noopener">QCOM 2000 vs MU 2026 Price Analog</a></h2><div class="open-row"><a class="btn" href="reports/qcom2000-mu2026-analog.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-19</span>
+                    <span class="k">Folder</span><span>chip-crash</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Peak-aligned melt-up rhymes (last 6m ~5.0× vs ~4.4×; level corr ~0.97) but day-to-day returns barely match (~0.08). 79 sessions after the peak MU is still ~72% of the high; QCOM was already ~54% and still falling. Full-year blow-off was much larger for QCOM (26× vs 9.5×).</p>
+              <div class="tags"><span class="tag">QCOM</span><span class="tag">MU</span><span class="tag">analog</span><span class="tag">2000</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>qcom2000_mu2026_analog.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/qcom2000-mu2026-analog.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/qcom2000-mu2026-analog.html</code><span class="badge ok">available</span></li><li class="art ok"><a href="qcom2000_mu2026_analog.json" target="_blank" rel="noopener">Summary JSON</a><code>output/qcom2000_mu2026_analog.json</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="soxx" data-id="soxx-period-analog"
+                     data-search="soxx jul 2024 vs jun 2026 analog overlays the current jun’26 episode on jul’24→mid’25. peak-aligned shape rhyme is moderate; day-to-day returns barely correlate. analog map from today: ~−8% into feb’25 point, ~−31% into apr’25 trough. soxx analog drawdown">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/soxx-period-analog.html" target="_blank" rel="noopener">SOXX Jul 2024 vs Jun 2026 Analog</a></h2><div class="open-row"><a class="btn" href="reports/soxx-period-analog.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-09-25</span>
+                    <span class="k">Folder</span><span>soxx</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Overlays the current Jun’26 episode on Jul’24→mid’25. Peak-aligned shape rhyme is moderate; day-to-day returns barely correlate. Analog map from today: ~−8% into Feb’25 point, ~−31% into Apr’25 trough.</p>
+              <div class="tags"><span class="tag">SOXX</span><span class="tag">analog</span><span class="tag">drawdown</span></div>
+              
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/soxx-period-analog.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/soxx-period-analog.html</code><span class="badge ok">available</span></li><li class="art ok"><a href="soxx_period_analog.json" target="_blank" rel="noopener">Results JSON</a><code>output/soxx_period_analog.json</code><span class="badge ok">available</span></li><li class="art ok"><span target="_blank" rel="noopener">Cursor canvas (IDE only)</span><code>canvases/soxx-period-analog.canvas.tsx</code><span class="badge ok">available</span><span class="canvas-note">Opens as source code outside Cursor — use the report page instead</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="soxx" data-id="soxx-gap-fill"
+                     data-search="soxx range gap fill (last 100) hard range gaps: open beyond prevhigh/prevlow by &gt;0.5%. fill = re-enter prior day’s range within 5 sessions. last 100: ~77% fill; gap-downs fill more often than gap-ups. soxx gap fill">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/soxx-gap-fill.html" target="_blank" rel="noopener">SOXX Range Gap Fill (Last 100)</a></h2><div class="open-row"><a class="btn" href="reports/soxx-gap-fill.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-09-22</span>
+                    <span class="k">Folder</span><span>soxx</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Hard range gaps: Open beyond PrevHigh/PrevLow by &gt;0.5%. Fill = re-enter prior day’s range within 5 sessions. Last 100: ~77% fill; gap-downs fill more often than gap-ups.</p>
+              <div class="tags"><span class="tag">SOXX</span><span class="tag">gap</span><span class="tag">fill</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>soxx_gap_fill_study.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/soxx-gap-fill.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/soxx-gap-fill.html</code><span class="badge ok">available</span></li><li class="art ok"><a href="soxx_gap_fill.json" target="_blank" rel="noopener">Summary JSON</a><code>output/soxx_gap_fill.json</code><span class="badge ok">available</span></li><li class="art ok"><a href="soxx_gap_fill_events.csv" target="_blank" rel="noopener">Events CSV</a><code>output/soxx_gap_fill_events.csv</code><span class="badge ok">available</span></li><li class="art ok"><span target="_blank" rel="noopener">Cursor canvas (IDE only)</span><code>canvases/soxx-gap-fill.canvas.tsx</code><span class="badge ok">available</span><span class="canvas-note">Opens as source code outside Cursor — use the report page instead</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="soxx" data-id="soxx-gap-up-unfilled"
+                     data-search="soxx gap up — not filled same day among last 100 gap-ups, 58 did not fill same day. mild average forward drift; split dominates: later fill ≤5d fades (~−3.4% next 5d), no fill ≤5d continues (~+3.8%). soxx gap-up continuation">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/soxx-gap-up-unfilled.html" target="_blank" rel="noopener">SOXX Gap Up — Not Filled Same Day</a></h2><div class="open-row"><a class="btn" href="reports/soxx-gap-up-unfilled.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-09-23</span>
+                    <span class="k">Folder</span><span>soxx</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Among last 100 gap-ups, 58 did not fill same day. Mild average forward drift; split dominates: later fill ≤5d fades (~−3.4% next 5d), no fill ≤5d continues (~+3.8%).</p>
+              <div class="tags"><span class="tag">SOXX</span><span class="tag">gap-up</span><span class="tag">continuation</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>soxx_gap_fill_study.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/soxx-gap-up-unfilled.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/soxx-gap-up-unfilled.html</code><span class="badge ok">available</span></li><li class="art ok"><a href="soxx_gap_up_unfilled_same_day.json" target="_blank" rel="noopener">Summary JSON</a><code>output/soxx_gap_up_unfilled_same_day.json</code><span class="badge ok">available</span></li><li class="art ok"><a href="soxx_gap_up_unfilled_same_day.csv" target="_blank" rel="noopener">Events CSV</a><code>output/soxx_gap_up_unfilled_same_day.csv</code><span class="badge ok">available</span></li><li class="art ok"><span target="_blank" rel="noopener">Cursor canvas (IDE only)</span><code>canvases/soxx-gap-up-unfilled-same-day.canvas.tsx</code><span class="badge ok">available</span><span class="canvas-note">Opens as source code outside Cursor — use the report page instead</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="soxx" data-id="soxx-gap-up-ma200"
+                     data-search="soxx gap up above 200ma same unfilled-same-day gap-up study filtered to prior close &gt; 200 sma. story unchanged: hold above prevhigh for several days is the edge; ma filter alone is mild. soxx gap-up ma200">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/soxx-gap-up-ma200.html" target="_blank" rel="noopener">SOXX Gap Up Above 200MA</a></h2><div class="open-row"><a class="btn" href="reports/soxx-gap-up-ma200.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-09-23</span>
+                    <span class="k">Folder</span><span>soxx</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Same unfilled-same-day gap-up study filtered to prior close &gt; 200 SMA. Story unchanged: hold above PrevHigh for several days is the edge; MA filter alone is mild.</p>
+              <div class="tags"><span class="tag">SOXX</span><span class="tag">gap-up</span><span class="tag">MA200</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>soxx_gap_fill_study.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/soxx-gap-up-ma200.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/soxx-gap-up-ma200.html</code><span class="badge ok">available</span></li><li class="art ok"><a href="soxx_gap_up_above_ma200.json" target="_blank" rel="noopener">Summary JSON</a><code>output/soxx_gap_up_above_ma200.json</code><span class="badge ok">available</span></li><li class="art ok"><a href="soxx_gap_up_above_ma200.csv" target="_blank" rel="noopener">Events CSV</a><code>output/soxx_gap_up_above_ma200.csv</code><span class="badge ok">available</span></li><li class="art ok"><span target="_blank" rel="noopener">Cursor canvas (IDE only)</span><code>canvases/soxx-gap-up-above-ma200.canvas.tsx</code><span class="badge ok">available</span><span class="canvas-note">Opens as source code outside Cursor — use the report page instead</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="event-studies" data-id="qqq-drop5-below-ma200"
+                     data-search="qqq −5% below 200ma — what next qqq −6.5% and −4.8% below 200ma on 2026-11-05 (48th such day). unlike soxx −10%: 1w bounce is real (med +2.2%, 70% up) but 3m med −4.8%; further dd med −19%. event close reclaimed fast; back above 200ma took med ~130 sessions. qqq ma200 crash forward">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/qqq-drop5-below-ma200.html" target="_blank" rel="noopener">QQQ −5% Below 200MA — What Next</a></h2><div class="open-row"><a class="btn" href="reports/qqq-drop5-below-ma200.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-11-05</span>
+                    <span class="k">Folder</span><span>event-studies</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">QQQ −6.5% and −4.8% below 200MA on 2026-11-05 (48th such day). Unlike SOXX −10%: 1w bounce is real (med +2.2%, 70% up) but 3m med −4.8%; further dd med −19%. Event close reclaimed fast; back above 200MA took med ~130 sessions.</p>
+              <div class="tags"><span class="tag">QQQ</span><span class="tag">MA200</span><span class="tag">crash</span><span class="tag">forward</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>qqq_drop5_below_ma200.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/qqq-drop5-below-ma200.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/qqq-drop5-below-ma200.html</code><span class="badge ok">available</span></li><li class="art ok"><a href="qqq_drop5_below_ma200.json" target="_blank" rel="noopener">Summary JSON</a><code>output/qqq_drop5_below_ma200.json</code><span class="badge ok">available</span></li><li class="art ok"><a href="qqq_drop5_below_ma200_events.csv" target="_blank" rel="noopener">Events CSV</a><code>output/qqq_drop5_below_ma200_events.csv</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="soxx" data-id="soxx-oneday-10pct"
+                     data-search="soxx one-day drop ≥10% — what next soxx −12.6% on 2026-11-05 (6th day ≤−10% since 2001). prior 5: next day med +7.6% (4/5 up); 1m med +17.6% (5/5 up); all reclaimed event close within ≤4 sessions. tiny sample — crash/covid analogues, not a sizing base rate. soxx crash one-day forward">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/soxx-oneday-10pct.html" target="_blank" rel="noopener">SOXX One-Day Drop ≥10% — What Next</a></h2><div class="open-row"><a class="btn" href="reports/soxx-oneday-10pct.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-11-05</span>
+                    <span class="k">Folder</span><span>soxx</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">SOXX −12.6% on 2026-11-05 (6th day ≤−10% since 2001). Prior 5: next day med +7.6% (4/5 up); 1m med +17.6% (5/5 up); all reclaimed event close within ≤4 sessions. Tiny sample — crash/COVID analogues, not a sizing base rate.</p>
+              <div class="tags"><span class="tag">SOXX</span><span class="tag">crash</span><span class="tag">one-day</span><span class="tag">forward</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>soxx_oneday_10pct_drop.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/soxx-oneday-10pct.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/soxx-oneday-10pct.html</code><span class="badge ok">available</span></li><li class="art ok"><a href="soxx_oneday_10pct_drop.json" target="_blank" rel="noopener">Summary JSON</a><code>output/soxx_oneday_10pct_drop.json</code><span class="badge ok">available</span></li><li class="art ok"><a href="soxx_oneday_10pct_drop_events.csv" target="_blank" rel="noopener">Events CSV</a><code>output/soxx_oneday_10pct_drop_events.csv</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="event-studies" data-id="spy-buy-point-r"
+                     data-search="spy good buy points (3r before stop) scan every spy day since 1994: next-open entry, stop atr×2 (also 3% / adr×2), good buy = hit +3r before stop within 63d. baseline hit ~26%, exp +0.34r. clearest edge: above 200ma + deep pullback ≤−10% (hit ~41%, exp +0.95r, edge score 0.74). near-high buys ≈ baseline. edge score = hit_3r × mean mfe_r. spy r-multiple buy-point atr stop-loss">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/spy-buy-point-r.html" target="_blank" rel="noopener">SPY Good Buy Points (3R before stop)</a></h2><div class="open-row"><a class="btn" href="reports/spy-buy-point-r.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-27</span>
+                    <span class="k">Folder</span><span>event-studies</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Scan every SPY day since 1994: next-open entry, stop ATR×2 (also 3% / ADR×2), good buy = hit +3R before stop within 63d. Baseline hit ~26%, exp +0.34R. Clearest edge: above 200MA + deep pullback ≤−10% (hit ~41%, exp +0.95R, edge score 0.74). Near-high buys ≈ baseline. Edge score = hit_3R × mean MFE_R.</p>
+              <div class="tags"><span class="tag">SPY</span><span class="tag">R-multiple</span><span class="tag">buy-point</span><span class="tag">ATR</span><span class="tag">stop-loss</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>spy_buy_point_r_study.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/spy-buy-point-r.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/spy-buy-point-r.html</code><span class="badge ok">available</span></li><li class="art ok"><a href="spy_buy_point_r_study.json" target="_blank" rel="noopener">Summary JSON</a><code>output/spy_buy_point_r_study.json</code><span class="badge ok">available</span></li><li class="art ok"><a href="spy_buy_point_r_events.csv" target="_blank" rel="noopener">Events CSV</a><code>output/spy_buy_point_r_events.csv</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="event-studies" data-id="rut-ndx-divergence"
+                     data-search="rut vs ndx sustained divergence one index near its 60d high while the other is ≥3% below its own. multi-week stretches are rare (~5% of streaks last ≥10 sessions; 26 episodes since 1987). after ≥2w, the gap usually widens over the next month (esp. when ndx leads / rut lags — matches today). catch-up is the minority path. rut ndx divergence breadth">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/rut-ndx-divergence.html" target="_blank" rel="noopener">RUT vs NDX Sustained Divergence</a></h2><div class="open-row"><a class="btn" href="reports/rut-ndx-divergence.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-09-25</span>
+                    <span class="k">Folder</span><span>event-studies</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">One index near its 60d high while the other is ≥3% below its own. Multi-week stretches are rare (~5% of streaks last ≥10 sessions; 26 episodes since 1987). After ≥2w, the gap usually widens over the next month (esp. when NDX leads / RUT lags — matches today). Catch-up is the minority path.</p>
+              <div class="tags"><span class="tag">RUT</span><span class="tag">NDX</span><span class="tag">divergence</span><span class="tag">breadth</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>rut_ndx_divergence.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/rut-ndx-divergence.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/rut-ndx-divergence.html</code><span class="badge ok">available</span></li><li class="art ok"><a href="rut_ndx_divergence.json" target="_blank" rel="noopener">Summary JSON</a><code>output/rut_ndx_divergence.json</code><span class="badge ok">available</span></li><li class="art ok"><a href="rut_ndx_divergence_events.csv" target="_blank" rel="noopener">Events CSV</a><code>output/rut_ndx_divergence_events.csv</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="event-studies" data-id="spx-weak-breadth-near-high"
+                     data-search="spx near highs with weak breadth spx within 2% of highs while % above 50ma is weak and nhl&amp;lt;0. today: ~24% above 50ma, nhl −19 — extreme vs history. milder past analogues (18 episodes) still had positive median spx forwards; not a reliable crash clock. extreme pct50&amp;lt;40 has almost no completed comps. spx breadth nhl divergence">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/spx-weak-breadth-near-high.html" target="_blank" rel="noopener">SPX Near Highs with Weak Breadth</a></h2><div class="open-row"><a class="btn" href="reports/spx-weak-breadth-near-high.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-09-29</span>
+                    <span class="k">Folder</span><span>event-studies</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">SPX within 2% of highs while % above 50MA is weak and NHL&amp;lt;0. Today: ~24% above 50MA, NHL −19 — extreme vs history. Milder past analogues (18 episodes) still had positive median SPX forwards; not a reliable crash clock. Extreme pct50&amp;lt;40 has almost no completed comps.</p>
+              <div class="tags"><span class="tag">SPX</span><span class="tag">breadth</span><span class="tag">NHL</span><span class="tag">divergence</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>spx_weak_breadth_near_high.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/spx-weak-breadth-near-high.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/spx-weak-breadth-near-high.html</code><span class="badge ok">available</span></li><li class="art ok"><a href="spx_weak_breadth_near_high.json" target="_blank" rel="noopener">Summary JSON</a><code>output/spx_weak_breadth_near_high.json</code><span class="badge ok">available</span></li><li class="art ok"><a href="spx_weak_breadth_near_high_events.csv" target="_blank" rel="noopener">Events CSV</a><code>output/spx_weak_breadth_near_high_events.csv</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="event-studies" data-id="ipo-lockup-expiration"
+                     data-search="ipo lock-up expiration (spcx + sample) spcx day-120 unlock (~328m / 7%) on oct 9. its prior 7% tranches: soft unlock day (med −2%) but +5d/+10d recovered in all 4 past cases. broader 180d ipo sample (n=70): mild day-0 drag, wide dispersion — not a mechanical crash. more supply still ahead (oct 24, post-q3, dec 8). spcx ipo lock-up event">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/ipo-lockup-expiration.html" target="_blank" rel="noopener">IPO Lock-up Expiration (SPCX + Sample)</a></h2><div class="open-row"><a class="btn" href="reports/ipo-lockup-expiration.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-09</span>
+                    <span class="k">Folder</span><span>event-studies</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">SPCX day-120 unlock (~328M / 7%) on Oct 9. Its prior 7% tranches: soft unlock day (med −2%) but +5d/+10d recovered in all 4 past cases. Broader 180d IPO sample (n=70): mild day-0 drag, wide dispersion — not a mechanical crash. More supply still ahead (Oct 24, post-Q3, Dec 8).</p>
+              <div class="tags"><span class="tag">SPCX</span><span class="tag">IPO</span><span class="tag">lock-up</span><span class="tag">event</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>ipo_lockup_expiration_study.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/ipo-lockup-expiration.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/ipo-lockup-expiration.html</code><span class="badge ok">available</span></li><li class="art ok"><a href="ipo_lockup_expiration.json" target="_blank" rel="noopener">Summary JSON</a><code>output/ipo_lockup_expiration.json</code><span class="badge ok">available</span></li><li class="art ok"><a href="ipo_lockup_expiration_events.csv" target="_blank" rel="noopener">IPO sample CSV</a><code>output/ipo_lockup_expiration_events.csv</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="event-studies" data-id="ndx-rally-below-ma50"
+                     data-search="ndx +3% rally below ma50 event days where ^ndx rose &gt;3% and closed below its 50-day ma; forward returns vs spx at 1w/1m/3m/6m. ndx ma50 event">
+              <header class="card-head">
+                <div>
+                  <h2>NDX +3% Rally Below MA50</h2>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-07-31</span>
+                    <span class="k">Folder</span><span>event-studies</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Event days where ^NDX rose &gt;3% and closed below its 50-day MA; forward returns vs SPX at 1W/1M/3M/6M.</p>
+              <div class="tags"><span class="tag">NDX</span><span class="tag">MA50</span><span class="tag">event</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>ndx_rally_below_ma50.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="ndx_rally_below_ma50_events.csv" target="_blank" rel="noopener">Events CSV</a><code>output/ndx_rally_below_ma50_events.csv</code><span class="badge ok">available</span></li><li class="art ok"><span target="_blank" rel="noopener">Cursor canvas</span><code>canvases/ndx-rally-below-ma50.canvas.tsx</code><span class="badge ok">available</span><span class="canvas-note">Opens as source code outside Cursor — use the report page instead</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="event-studies" data-id="dow-ndx-divergence"
+                     data-search="dow up / ndx down divergence same-day dow &gt;+0.5% while ndx &lt;−0.5%; forward returns at multiple horizons. dow ndx divergence">
+              <header class="card-head">
+                <div>
+                  <h2>DOW Up / NDX Down Divergence</h2>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-07-29</span>
+                    <span class="k">Folder</span><span>event-studies</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Same-day DOW &gt;+0.5% while NDX &lt;−0.5%; forward returns at multiple horizons.</p>
+              <div class="tags"><span class="tag">DOW</span><span class="tag">NDX</span><span class="tag">divergence</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>dow_ndx_divergence.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="dow_ndx_divergence_events.csv" target="_blank" rel="noopener">Events CSV</a><code>output/dow_ndx_divergence_events.csv</code><span class="badge ok">available</span></li><li class="art ok"><span target="_blank" rel="noopener">Cursor canvas</span><code>canvases/dow-ndx-divergence.canvas.tsx</code><span class="badge ok">available</span><span class="canvas-note">Opens as source code outside Cursor — use the report page instead</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="event-studies" data-id="us-china-summit"
+                     data-search="us–china summit window equity behavior around us–china summit event windows (summary + event table). geopolitics event">
+              <header class="card-head">
+                <div>
+                  <h2>US–China Summit Window</h2>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-09-23</span>
+                    <span class="k">Folder</span><span>event-studies</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Equity behavior around US–China summit event windows (summary + event table).</p>
+              <div class="tags"><span class="tag">geopolitics</span><span class="tag">event</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>us_china_summit_study.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="us_china_summit_summary.json" target="_blank" rel="noopener">Summary JSON</a><code>output/us_china_summit_summary.json</code><span class="badge ok">available</span></li><li class="art ok"><a href="us_china_summit_events.csv" target="_blank" rel="noopener">Events CSV</a><code>output/us_china_summit_events.csv</code><span class="badge ok">available</span></li><li class="art ok"><span target="_blank" rel="noopener">Cursor canvas</span><code>canvases/us-china-summit-5d.canvas.tsx</code><span class="badge ok">available</span><span class="canvas-note">Opens as source code outside Cursor — use the report page instead</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="macros" data-id="bank-late-cycle"
+                     data-search="banks extended late cycle xlf strong+extended near spx highs vs later ndx/spx forward returns. xlf late-cycle">
+              <header class="card-head">
+                <div>
+                  <h2>Banks Extended Late Cycle</h2>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-08-03</span>
+                    <span class="k">Folder</span><span>macros</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">XLF strong+extended near SPX highs vs later NDX/SPX forward returns.</p>
+              <div class="tags"><span class="tag">XLF</span><span class="tag">late-cycle</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>bank_extended_late_cycle.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="bank_extended_late_cycle_events.csv" target="_blank" rel="noopener">Events CSV</a><code>output/bank_extended_late_cycle_events.csv</code><span class="badge ok">available</span></li><li class="art ok"><span target="_blank" rel="noopener">Cursor canvas</span><code>canvases/bank-extended-late-cycle.canvas.tsx</code><span class="badge ok">available</span><span class="canvas-note">Opens as source code outside Cursor — use the report page instead</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="macros" data-id="jpy-carry"
+                     data-search="jpy carry / jgb yields vs equities usd/jpy moves and rising jgb yields vs subsequent ndx/spx returns when spx is near highs. jpy carry jgb">
+              <header class="card-head">
+                <div>
+                  <h2>JPY Carry / JGB Yields vs Equities</h2>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-08-10</span>
+                    <span class="k">Folder</span><span>macros</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">USD/JPY moves and rising JGB yields vs subsequent NDX/SPX returns when SPX is near highs.</p>
+              <div class="tags"><span class="tag">JPY</span><span class="tag">carry</span><span class="tag">JGB</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>jpy_carry_equity_study.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="jpy_carry_equity_summary.csv" target="_blank" rel="noopener">Summary CSV</a><code>output/jpy_carry_equity_summary.csv</code><span class="badge ok">available</span></li><li class="art ok"><a href="jpy_carry_equity_events.csv" target="_blank" rel="noopener">Events CSV</a><code>output/jpy_carry_equity_events.csv</code><span class="badge ok">available</span></li><li class="art ok"><a href="jpy_carry_equity_correlations.csv" target="_blank" rel="noopener">Correlations</a><code>output/jpy_carry_equity_correlations.csv</code><span class="badge ok">available</span></li><li class="art ok"><span target="_blank" rel="noopener">Cursor canvas</span><code>canvases/jpy-carry-equity.canvas.tsx</code><span class="badge ok">available</span><span class="canvas-note">Opens as source code outside Cursor — use the report page instead</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="macros" data-id="tlt-spx-correlation"
+                     data-search="tlt vs spx correlation bond–stock corr flipped from negative (classic hedge) to positive since 2022. today rolling 21d/63d corr is strongly positive (~+0.64 / +0.49) — yields and equities moving together. tlt −5%/21d episodes: spx median still up by 3–6m historically. tlt spx correlation yields">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/tlt-spx-correlation.html" target="_blank" rel="noopener">TLT vs SPX Correlation</a></h2><div class="open-row"><a class="btn" href="reports/tlt-spx-correlation.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-10-01</span>
+                    <span class="k">Folder</span><span>macros</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Bond–stock corr flipped from negative (classic hedge) to positive since 2022. Today rolling 21d/63d corr is strongly positive (~+0.64 / +0.49) — yields and equities moving together. TLT −5%/21d episodes: SPX median still up by 3–6m historically.</p>
+              <div class="tags"><span class="tag">TLT</span><span class="tag">SPX</span><span class="tag">correlation</span><span class="tag">yields</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>tlt_spx_correlation.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/tlt-spx-correlation.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/tlt-spx-correlation.html</code><span class="badge ok">available</span></li><li class="art ok"><a href="tlt_spx_correlation.json" target="_blank" rel="noopener">Summary JSON</a><code>output/tlt_spx_correlation.json</code><span class="badge ok">available</span></li><li class="art ok"><a href="tlt_spx_correlation_rolling.csv" target="_blank" rel="noopener">Rolling corr CSV</a><code>output/tlt_spx_correlation_rolling.csv</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="macros" data-id="treasury-5pct-equity"
+                     data-search="10y treasury ≥5% vs stock indices dgs10 just broke back above 5% (5.11%, post-2020 high) — first sustained episode since 2007. post-2000 episode starts: soft 1–3m for equities (ndx worse than spx); 6m often recovered. tiny sample; case history not a crash clock. treasury yields spx ndx">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/treasury-5pct-equity.html" target="_blank" rel="noopener">10Y Treasury ≥5% vs Stock Indices</a></h2><div class="open-row"><a class="btn" href="reports/treasury-5pct-equity.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-09-25</span>
+                    <span class="k">Folder</span><span>macros</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">DGS10 just broke back above 5% (5.11%, post-2020 high) — first sustained episode since 2007. Post-2000 episode starts: soft 1–3m for equities (NDX worse than SPX); 6m often recovered. Tiny sample; case history not a crash clock.</p>
+              <div class="tags"><span class="tag">Treasury</span><span class="tag">yields</span><span class="tag">SPX</span><span class="tag">NDX</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>treasury_5pct_equity_study.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/treasury-5pct-equity.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/treasury-5pct-equity.html</code><span class="badge ok">available</span></li><li class="art ok"><a href="treasury_5pct_equity.json" target="_blank" rel="noopener">Summary JSON</a><code>output/treasury_5pct_equity.json</code><span class="badge ok">available</span></li><li class="art ok"><a href="treasury_5pct_equity_events.csv" target="_blank" rel="noopener">Events CSV</a><code>output/treasury_5pct_equity_events.csv</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="macros" data-id="treasury-yields"
+                     data-search="treasury yield moves vs equities fred yield shifts vs subsequent equity returns. treasury yields">
+              <header class="card-head">
+                <div>
+                  <h2>Treasury Yield Moves vs Equities</h2>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-08-03</span>
+                    <span class="k">Folder</span><span>macros</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">FRED yield shifts vs subsequent equity returns.</p>
+              <div class="tags"><span class="tag">Treasury</span><span class="tag">yields</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>treasury_yield_equity_study.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="treasury_yield_equity_summary.csv" target="_blank" rel="noopener">Summary CSV</a><code>output/treasury_yield_equity_summary.csv</code><span class="badge ok">available</span></li><li class="art ok"><a href="treasury_yield_equity_events.csv" target="_blank" rel="noopener">Events CSV</a><code>output/treasury_yield_equity_events.csv</code><span class="badge ok">available</span></li><li class="art ok"><span target="_blank" rel="noopener">Cursor canvas</span><code>canvases/treasury-yield-equity.canvas.tsx</code><span class="badge ok">available</span><span class="canvas-note">Opens as source code outside Cursor — use the report page instead</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="market-ops" data-id="weekly-market-dashboard"
+                     data-search="weekly market dashboard live weekly market desk: marketinout-style index price + advance/decline line, vix / realized vol / atr% regime for stop-loss context, % advancing and sma participation, screener sector concentration, weekly risers ≥5%, and top relative strength vs spx. refresh with daily_breadth.py + weekly_report.py. weekly breadth dashboard screener">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="breadth.html" target="_blank" rel="noopener">Weekly Market Dashboard</a></h2><div class="open-row"><a class="btn" href="breadth.html" target="_blank" rel="noopener">Open dashboard</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-11-21</span>
+                    <span class="k">Folder</span><span>market-ops</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Live weekly market desk: MarketInOut-style index price + Advance/Decline Line, VIX / realized vol / ATR% regime for stop-loss context, % advancing and SMA participation, screener sector concentration, weekly risers ≥5%, and top relative strength vs SPX. Refresh with daily_breadth.py + weekly_report.py.</p>
+              <div class="tags"><span class="tag">weekly</span><span class="tag">breadth</span><span class="tag">dashboard</span><span class="tag">screener</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>weekly_report.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="breadth.html" target="_blank" rel="noopener">Open dashboard</a><code>output/breadth.html</code><span class="badge ok">available</span></li><li class="art ok"><a href="weekly_sector_report_20261121_1457.xlsx" target="_blank" rel="noopener">Latest Excel (Nov 21)</a><code>output/weekly_sector_report_20261121_1457.xlsx</code><span class="badge ok">available</span></li><li class="art ok"><a href="weekly_risers_20261121_1457.csv" target="_blank" rel="noopener">Latest weekly risers</a><code>output/weekly_risers_20261121_1457.csv</code><span class="badge ok">available</span></li><li class="art ok"><a href="relative_strength_20261121_1457.csv" target="_blank" rel="noopener">Latest relative strength</a><code>output/relative_strength_20261121_1457.csv</code><span class="badge ok">available</span></li><li class="art ok"><a href="sector_rankings_20261121_1457.csv" target="_blank" rel="noopener">Latest sector rankings</a><code>output/sector_rankings_20261121_1457.csv</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="market-ops" data-id="momentum-pullback"
+                     data-search="momentum pullback backtest martin luk-style momentum pullback on the s&amp;p 500 and nasdaq 100. trend is 9 ema &gt; 21 ema &gt; 50 ema; the setup is a pullback to a rising 9 or 21 ema; the stop sits under the recent low or that ema and is hard-capped at 0.5×adr%; each trade risks 0.4% of equity; the exit is a close below the ema that triggered the entry. history is yahoo finance. refresh with momentum_pullback.py. momentum pullback backtest ema screener">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="short.html" target="_blank" rel="noopener">Momentum Pullback Backtest</a></h2><div class="open-row"><a class="btn" href="short.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-11-15</span>
+                    <span class="k">Folder</span><span>market-ops</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Martin Luk-style momentum pullback on the S&amp;P 500 and Nasdaq 100. Trend is 9 EMA &gt; 21 EMA &gt; 50 EMA; the setup is a pullback to a rising 9 or 21 EMA; the stop sits under the recent low or that EMA and is hard-capped at 0.5×ADR%; each trade risks 0.4% of equity; the exit is a close below the EMA that triggered the entry. History is Yahoo Finance. Refresh with momentum_pullback.py.</p>
+              <div class="tags"><span class="tag">momentum</span><span class="tag">pullback</span><span class="tag">backtest</span><span class="tag">EMA</span><span class="tag">screener</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>momentum_pullback.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="short.html" target="_blank" rel="noopener">Open backtest page</a><code>output/short.html</code><span class="badge ok">available</span></li><li class="art ok"><a href="momentum_pullback_trades.csv" target="_blank" rel="noopener">Closed trades</a><code>output/momentum_pullback_trades.csv</code><span class="badge ok">available</span></li><li class="art ok"><a href="momentum_pullback_candidates.csv" target="_blank" rel="noopener">Current candidates</a><code>output/momentum_pullback_candidates.csv</code><span class="badge ok">available</span></li><li class="art ok"><a href="momentum_pullback_summary.json" target="_blank" rel="noopener">Summary JSON</a><code>output/momentum_pullback_summary.json</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="market-ops" data-id="weekly-screener"
+                     data-search="weekly sector / screener reports recurring futu screener exports: sector rankings, risers, relative strength, excel packs (latest stamp). weekly screener sectors">
+              <header class="card-head">
+                <div>
+                  <h2>Weekly Sector / Screener Reports</h2>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-11-21</span>
+                    <span class="k">Folder</span><span>market-ops</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Recurring Futu screener exports: sector rankings, risers, relative strength, Excel packs (latest stamp).</p>
+              <div class="tags"><span class="tag">weekly</span><span class="tag">screener</span><span class="tag">sectors</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>weekly_report.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="weekly_sector_report_20261121_1457.xlsx" target="_blank" rel="noopener">Latest Excel (Nov 21)</a><code>output/weekly_sector_report_20261121_1457.xlsx</code><span class="badge ok">available</span></li><li class="art ok"><a href="sector_rankings_20261121_1457.csv" target="_blank" rel="noopener">Latest sector rankings</a><code>output/sector_rankings_20261121_1457.csv</code><span class="badge ok">available</span></li><li class="art ok"><a href="weekly_risers_20261121_1457.csv" target="_blank" rel="noopener">Latest weekly risers</a><code>output/weekly_risers_20261121_1457.csv</code><span class="badge ok">available</span></li><li class="art ok"><a href="market_breadth_20261121_1457.csv" target="_blank" rel="noopener">Latest market breadth CSV</a><code>output/market_breadth_20261121_1457.csv</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="market-ops" data-id="daily-breadth"
+                     data-search="daily breadth history yahoo-based daily breadth history used by the weekly market dashboard (run daily_breadth.py / backfill_history.py). breadth history">
+              <header class="card-head">
+                <div>
+                  <h2>Daily Breadth History</h2>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-11-21</span>
+                    <span class="k">Folder</span><span>market-ops</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">Yahoo-based daily breadth history used by the Weekly Market Dashboard (run daily_breadth.py / backfill_history.py).</p>
+              <div class="tags"><span class="tag">breadth</span><span class="tag">history</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>daily_breadth.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><span target="_blank" rel="noopener">History CSV</span><code>data/history/daily_breadth.csv</code><span class="badge ok">available</span></li><li class="art ok"><span target="_blank" rel="noopener">Weekly screener history</span><code>data/history/weekly_screener.csv</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+      </div>
+      <div class="empty" id="empty">No analyses match this folder / search.</div>
+    </main>
+  </div>
+  <script>
+    const folders = Array.from(document.querySelectorAll('.folder'));
+    const cards = Array.from(document.querySelectorAll('.card'));
+    const blurbs = Array.from(document.querySelectorAll('[data-folder-blurb]'));
+    const q = document.getElementById('q');
+    const empty = document.getElementById('empty');
+    const viewTitle = document.getElementById('view-title');
+    const viewSub = document.getElementById('view-sub');
+    const folderMeta = {"tight-breakouts": {"name": "Tight Breakouts", "description": "Weekly journal of observed breakouts. Track stop distance, volume, and 5d/10d/1m/3m follow-through. Target: SL < 8% with volume."}, "soxx": {"name": "SOXX / Semiconductors", "description": "Gap-fill studies, unfilled gap-ups, MA200 filter, and Jul\u201924 vs Jun\u201926 path analog."}, "chip-crash": {"name": "Chip Names \u00b7 Crash Aftermath", "description": "Peak-to-trough \u226540% inside ~1 month: forward returns from the trough for INTC, MU, and peers."}, "event-studies": {"name": "Event Studies", "description": "Forward-return studies around market signals (divergence, rallies, banks, FX/yields, geopolitics)."}, "market-ops": {"name": "Market Ops & Breadth", "description": "Daily breadth, weekly screener reports, the live HTML dashboard, and the momentum pullback backtest."}, "macros": {"name": "Macro Overlays", "description": "Cross-asset studies: JPY carry, Treasury yields, late-cycle banks."}, "hk-dividend": {"name": "HK Dividend Equity", "description": "High-yield equity research for Hong Kong listed names (telcos, utilities, REITs)."}};
+
+    let active = '__all__';
+
+    function apply() {
+      const query = (q.value || '').trim().toLowerCase();
+      let shown = 0;
+      cards.forEach(card => {
+        const folderOk = active === '__all__' || card.dataset.folder === active ||
+          (active === '__other__' && !folderMeta[card.dataset.folder]);
+        const searchOk = !query || (card.dataset.search || '').includes(query);
+        const ok = folderOk && searchOk;
+        card.classList.toggle('hidden', !ok);
+        if (ok) shown += 1;
+      });
+      empty.classList.toggle('visible', shown === 0);
+      blurbs.forEach(b => b.classList.toggle('visible', b.dataset.folderBlurb === active));
+      if (active === '__all__') {
+        viewTitle.textContent = 'All analyses';
+        viewSub.textContent = shown + ' shown';
+      } else if (folderMeta[active]) {
+        viewTitle.textContent = folderMeta[active].name;
+        viewSub.textContent = shown + ' in this folder';
+      } else {
+        viewTitle.textContent = 'Other';
+        viewSub.textContent = shown + ' shown';
+      }
+    }
+
+    folders.forEach(btn => {
+      btn.addEventListener('click', () => {
+        folders.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        active = btn.dataset.folder;
+        apply();
+      });
+    });
+    q.addEventListener('input', apply);
+    apply();
+  </script>
+</body>
+</html>

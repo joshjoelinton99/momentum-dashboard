@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>2230.HK · MEDIALINK GROUP — Dividend Research</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+:root {
+  --bg: #f4f5f2;
+  --panel: #fff;
+  --ink: #1a1d18;
+  --muted: #5c6358;
+  --line: #d8ddd4;
+  --accent: #2f5d50;
+  --accent-soft: #e7f0ec;
+  --danger: #8b3a3a;
+  --ok: #2f5d50;
+  --warn: #8a5a18;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --sans: "Source Sans 3", "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--ink);
+  background:
+    radial-gradient(1000px 420px at 8% -8%, #e8efe9 0%, transparent 55%),
+    var(--bg);
+  line-height: 1.45;
+}
+.wrap { max-width: 1040px; margin: 0 auto; padding: 28px 22px 64px; }
+.topnav { display: flex; gap: 14px; align-items: center; margin-bottom: 18px; font-size: 13px; }
+.topnav a { color: var(--accent); font-weight: 650; text-decoration: none; }
+.topnav a:hover { text-decoration: underline; }
+.brand { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+h1 { font-size: 26px; margin: 4px 0 8px; line-height: 1.2; }
+.sub { color: var(--muted); font-size: 14px; margin: 0 0 20px; max-width: 70ch; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0 20px; }
+@media (max-width: 720px) { .stats { grid-template-columns: 1fr 1fr; } }
+.stat {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
+}
+.stat .v { font-size: 22px; font-weight: 700; color: var(--accent); }
+.stat .v.warn { color: var(--warn); }
+.stat .v.danger { color: var(--danger); }
+.stat .l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; font-weight: 700; }
+.callout {
+  background: var(--accent-soft); border: 1px solid #cfe0d7; border-radius: 10px;
+  padding: 12px 14px; margin: 14px 0 20px; font-size: 14px;
+}
+.callout.warn { background: #f7f0e4; border-color: #e5d3b0; }
+.callout strong { display: block; margin-bottom: 4px; }
+h2 { font-size: 17px; margin: 28px 0 8px; }
+h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 18px 0 6px; }
+.panel {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px 16px; margin: 10px 0 16px;
+}
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 8px 8px; border-top: 1px solid #eef1ea; text-align: left; vertical-align: top; }
+th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 700; border-top: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr.hl td { background: #eef6f2; }
+tr.bad td { background: #f8eeee; }
+.bars { display: grid; gap: 8px; margin: 8px 0 4px; }
+.bar-row { display: grid; grid-template-columns: 56px 1fr 64px; gap: 10px; align-items: center; font-size: 13px; }
+.bar-track { height: 10px; background: #e8ece4; border-radius: 999px; overflow: hidden; position: relative; }
+.bar-fill { height: 100%; background: var(--accent); border-radius: 999px; }
+.bar-fill.neg { background: var(--danger); }
+.chart-wrap { position: relative; height: 280px; margin: 8px 0 4px; }
+.muted { color: var(--muted); font-size: 12px; }
+code { font-family: var(--mono); font-size: 11px; background: #efece6; padding: 1px 5px; border-radius: 4px; }
+.footer { margin-top: 36px; font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topnav">
+      <a href="../analysis_library.html">← Analysis library</a>
+      <span class="muted">HTML report (opens in browser)</span>
+    </div>
+    <div class="brand">Research desk</div>
+    <h1>2230.HK · MEDIALINK GROUP — Dividend Research</h1>
+    <p class="sub">2230.HK · Entertainment · high-yield HK screen · price HK$0.19 · as of 2026-10-02</p>
+    <div class="stats"><div class="stat"><div class="v">HK$0.19</div><div class="l">Price</div></div><div class="stat"><div class="v">7.6%</div><div class="l">Indicated yield</div></div><div class="stat"><div class="v">1.4%</div><div class="l">Calendar DPS yield</div></div><div class="stat"><div class="v">51%</div><div class="l">Payout</div></div></div>
+<div class="stats"><div class="stat"><div class="v">6.4x</div><div class="l">Trailing P/E</div></div><div class="stat"><div class="v">0.58x</div><div class="l">P/B</div></div><div class="stat"><div class="v">0.41</div><div class="l">Beta</div></div><div class="stat"><div class="v">HK$0.4B</div><div class="l">Market cap</div></div></div>
+<div class="callout "><strong>Keep on HK high-yield shortlist</strong>MEDIALINK GROUP (2230.HK) is a Entertainment name screening at ~7.6% indicated dividend yield with a 51% payout and trailing P/E 6.4x. Beta is low, so it can act as portfolio ballast. Yahoo revenue growth print: -9.1%. Indicated yield ~7.6% with a usable payout and single-digit/teen P/E. This looks like an income holding rather than a special situation — size for yield stability and re-check the latest declared DPS.</div>
+<div class="panel"><p>Medialink Group Limited, an investment holding company, engages in the media content distribution business in Hong Kong, Asia, the Americas, and Europe. The company operates in two segments, Media Content Distribution and Brand Licensing. It distributes media content licensed from third party media content licensors, including animation series, variety shows, drama series, animated and live-action feature films, and other video content; provision of licensing agency services; theatrical release; retail trading; and events and exhibitions. The company is also involved in licensing and sub-licensing various rights in relation to brands owned by brand licensors comprising merchandising rights; location-based entertainment rights; sale of merchandises; organizing mega events; promotion rights;</p></div>
+<h2>Dividend math</h2>
+<div class="panel"><table><thead><tr><th class="">Basis</th><th class="num">DPS / price</th><th class="num">Yield / vs px</th></tr></thead><tbody><tr><td>Yahoo indicated yield</td><td class="num">0.010</td><td class="num">7.58%</td></tr><tr><td>Trailing DPS / yield</td><td class="num">0.015</td><td class="num">7.73%</td></tr><tr><td>Latest calendar-year DPS (ex-date sum)</td><td class="num">0.003</td><td class="num">1.40%</td></tr><tr><td>5y avg yield (Yahoo)</td><td class="num">—</td><td class="num">6.18%</td></tr></tbody></table></div>
+<h2>Annual DPS (ex-date calendar year)</h2>
+
+    <div class="panel"><div class="chart-wrap"><canvas id="dps_2230"></canvas></div></div>
+    <script>
+      (() => {
+        const cfg = {"type": "bar", "data": {"labels": ["2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"], "datasets": [{"label": "DPS (HK$)", "data": [0.0154, 0.0049, 0.007, 0.0105, 0.0131, 0.0143, 0.0148, 0.0027], "backgroundColor": "#2f5d50"}]}, "options": {"responsive": true, "maintainAspectRatio": false, "plugins": {"legend": {"display": false}}, "scales": {"y": {"title": {"display": true, "text": "Dividend per share (HK$)"}}}}};
+        const ctx = document.getElementById('dps_2230');
+        if (ctx && window.Chart) new Chart(ctx, cfg);
+      })();
+    </script>
+    
+<p class='muted'>Yahoo Finance cash dividends summed by calendar year of the ex-date. The latest year may be incomplete (YTD). Currency is the Yahoo series (usually HKD).</p>
+<h3>Recent ex-dates</h3>
+<div class="panel"><table><thead><tr><th class="">Ex-date</th><th class="num">DPS</th></tr></thead><tbody><tr><td>2026-09-23</td><td class="num">0.0027</td></tr><tr><td>2025-12-15</td><td class="num">0.0120</td></tr><tr><td>2025-09-19</td><td class="num">0.0028</td></tr><tr><td>2024-12-16</td><td class="num">0.0109</td></tr><tr><td>2024-09-27</td><td class="num">0.0034</td></tr><tr><td>2023-12-15</td><td class="num">0.0089</td></tr><tr><td>2023-09-21</td><td class="num">0.0042</td></tr><tr><td>2022-12-15</td><td class="num">0.0070</td></tr></tbody></table></div>
+<h2>Share price (monthly)</h2>
+
+    <div class="panel"><div class="chart-wrap"><canvas id="px_2230"></canvas></div></div>
+    <script>
+      (() => {
+        const cfg = {"type": "line", "data": {"labels": ["2023-02", "2023-05", "2023-08", "2023-11", "2024-02", "2024-05", "2024-08", "2024-11", "2025-02", "2025-05", "2025-08", "2025-11", "2026-02", "2026-05", "2026-08", "2026-10"], "datasets": [{"label": "Close (HK$)", "data": [0.1491, 0.1428, 0.1467, 0.146, 0.1586, 0.1484, 0.1109, 0.1487, 0.1617, 0.2156, 0.2695, 0.2252, 0.224, 0.219, 0.1934, 0.193], "borderColor": "#2f5d50", "backgroundColor": "rgba(47,93,80,0.12)", "fill": true, "tension": 0.25, "pointRadius": 2}]}, "options": {"responsive": true, "maintainAspectRatio": false, "plugins": {"legend": {"display": false}}, "scales": {"y": {"title": {"display": true, "text": "Share price (HK$)"}}}}};
+        const ctx = document.getElementById('px_2230');
+        if (ctx && window.Chart) new Chart(ctx, cfg);
+      })();
+    </script>
+    
+<p class='muted'>Yahoo Finance monthly closes, downsampled. Last ~5 years.</p>
+<h2>Profit, cash, balance sheet</h2>
+<div class="stats"><div class="stat"><div class="v">248.6M</div><div class="l">Cash (Yahoo)</div></div><div class="stat"><div class="v">14.1M</div><div class="l">Total debt</div></div><div class="stat"><div class="v">2.2</div><div class="l">Debt / equity</div></div><div class="stat"><div class="v">-32.8M</div><div class="l">Free cash flow</div></div></div>
+<div class="panel"><h3>Income statement (Yahoo)</h3>
+    <table><thead><tr><th>Line</th><th class="num">2026-03-31</th><th class="num">2025-03-31</th><th class="num">2024-03-31</th><th class="num">2023-03-31</th></tr></thead>
+    <tbody><tr class="hl"><td>Net Income</td><td class="num">—</td><td class="num">52.3M</td><td class="num">49.0M</td><td class="num">47.5M</td></tr><tr><td>Operating Income</td><td class="num">—</td><td class="num">130.7M</td><td class="num">95.8M</td><td class="num">111.9M</td></tr><tr><td>EBITDA</td><td class="num">—</td><td class="num">63.3M</td><td class="num">69.4M</td><td class="num">61.9M</td></tr></tbody></table>
+    <p class="muted">Latest column YoY on first line: —. Source: Yahoo Finance statements.</p>
+    </div>
+<div class="panel"><h3>Cash flow (Yahoo)</h3>
+    <table><thead><tr><th>Line</th><th class="num">2025-03-31</th><th class="num">2024-03-31</th><th class="num">2023-03-31</th><th class="num">2022-03-31</th></tr></thead>
+    <tbody><tr class="hl"><td>Free Cash Flow</td><td class="num">121.3M</td><td class="num">-18.8M</td><td class="num">13.5M</td><td class="num">51.5M</td></tr><tr><td>Operating Cash Flow</td><td class="num">123.9M</td><td class="num">-13.4M</td><td class="num">14.8M</td><td class="num">68.7M</td></tr><tr><td>Cash Dividends Paid</td><td class="num">-27.3M</td><td class="num">-25.1M</td><td class="num">-20.2M</td><td class="num">-13.5M</td></tr></tbody></table>
+    <p class="muted">Latest column YoY on first line: -743.5%. Source: Yahoo Finance statements.</p>
+    </div>
+<div class="panel"><h3>Balance sheet (Yahoo)</h3>
+    <table><thead><tr><th>Line</th><th class="num">2025-03-31</th><th class="num">2024-03-31</th><th class="num">2023-03-31</th><th class="num">2022-03-31</th></tr></thead>
+    <tbody><tr class="hl"><td>Total Debt</td><td class="num">4.7M</td><td class="num">9.5M</td><td class="num">13.4M</td><td class="num">18.1M</td></tr><tr><td>Cash Cash Equivalents And Short Term Investments</td><td class="num">337.8M</td><td class="num">235.7M</td><td class="num">281.7M</td><td class="num">283.3M</td></tr><tr><td>Stockholders Equity</td><td class="num">614.8M</td><td class="num">587.7M</td><td class="num">565.4M</td><td class="num">542.1M</td></tr></tbody></table>
+    <p class="muted">Latest column YoY on first line: -50.4%. Source: Yahoo Finance statements.</p>
+    </div>
+<h2>Growth &amp; profitability (Yahoo)</h2>
+<div class="panel"><table><thead><tr><th class="">Metric</th><th class="num">Value</th></tr></thead><tbody><tr><td>Revenue growth</td><td class="num">-9.1%</td></tr><tr><td>Earnings growth</td><td class="num">2.0%</td></tr><tr><td>ROE</td><td class="num">8.9%</td></tr><tr><td>Profit margin</td><td class="num">8.7%</td></tr><tr><td>Operating margin</td><td class="num">19.4%</td></tr><tr><td>Forward P/E</td><td class="num">—</td></tr></tbody></table></div>
+<h2>Pack peer screen (this list, ranked by indicated yield)</h2>
+<div class='panel'><table><thead><tr><th>Ticker</th><th>Name</th><th class='num'>Price</th><th class='num'>Yield %</th><th class='num'>Payout %</th><th class='num'>P/E</th><th class='num'>P/B</th><th class='num'>Beta</th></tr></thead><tbody><tr><td>0564</td><td>ZCZL</td><td class="num">11.04</td><td class="num">12.72</td><td class="num">64</td><td class="num">4.9</td><td class="num">0.70</td><td class="num">0.38</td></tr><tr><td>3316</td><td>BINJIANG SER</td><td class="num">20.34</td><td class="num">9.08</td><td class="num">72</td><td class="num">7.9</td><td class="num">2.80</td><td class="num">0.51</td></tr><tr><td>2368</td><td>EAGLE NICE</td><td class="num">2.90</td><td class="num">8.97</td><td class="num">93</td><td class="num">9.7</td><td class="num">0.90</td><td class="num">0.02</td></tr><tr><td>3968</td><td>CM BANK</td><td class="num">50.75</td><td class="num">8.66</td><td class="num">34</td><td class="num">7.5</td><td class="num">0.96</td><td class="num">0.46</td></tr><tr><td>0762</td><td>CHINA UNICOM</td><td class="num">5.42</td><td class="num">8.52</td><td class="num">80</td><td class="num">8.9</td><td class="num">0.38</td><td class="num">0.52</td></tr><tr><td>8371</td><td>TASTEGOURMET GP</td><td class="num">2.08</td><td class="num">8.50</td><td class="num">52</td><td class="num">6.7</td><td class="num">2.37</td><td class="num">0.55</td></tr><tr><td>3998</td><td>BOSIDENG</td><td class="num">3.94</td><td class="num">7.81</td><td class="num">75</td><td class="num">9.8</td><td class="num">2.14</td><td class="num">0.59</td></tr><tr><td>0640</td><td>INFINITY DEV</td><td class="num">2.31</td><td class="num">7.81</td><td class="num">52</td><td class="num">5.9</td><td class="num">1.03</td><td class="num">0.19</td></tr><tr><td>3360</td><td>FE HORIZON</td><td class="num">6.25</td><td class="num">7.76</td><td class="num">60</td><td class="num">6.4</td><td class="num">0.49</td><td class="num">0.70</td></tr><tr class="hl"><td>2230</td><td>MEDIALINK GROUP</td><td class="num">0.19</td><td class="num">7.58</td><td class="num">51</td><td class="num">6.4</td><td class="num">0.58</td><td class="num">0.41</td></tr><tr><td>0598</td><td>SINOTRANS</td><td class="num">4.42</td><td class="num">7.47</td><td class="num">56</td><td class="num">7.1</td><td class="num">0.66</td><td class="num">1.16</td></tr><tr><td>0752</td><td>PICO FAR EAST</td><td class="num">2.12</td><td class="num">6.82</td><td class="num">42</td><td class="num">6.2</td><td class="num">1.02</td><td class="num">0.51</td></tr><tr><td>0168</td><td>TSINGTAO BR-500</td><td class="num">39.08</td><td class="num">6.74</td><td class="num">69</td><td class="num">9.9</td><td class="num">1.45</td><td class="num">0.34</td></tr><tr><td>6690</td><td>HAIER SMARTHOME</td><td class="num">20.06</td><td class="num">6.52</td><td class="num">14</td><td class="num">8.9</td><td class="num">1.32</td><td class="num">0.45</td></tr><tr><td>0874</td><td>BAIYUNSHAN PH</td><td class="num">12.99</td><td class="num">6.48</td><td class="num">54</td><td class="num">7.1</td><td class="num">0.46</td><td class="num">0.17</td></tr><tr><td>0728</td><td>CHINA TELECOM</td><td class="num">4.44</td><td class="num">6.44</td><td class="num">85</td><td class="num">12.0</td><td class="num">0.74</td><td class="num">0.55</td></tr><tr><td>0857</td><td>PETROCHINA</td><td class="num">9.54</td><td class="num">6.22</td><td class="num">49</td><td class="num">8.5</td><td class="num">0.91</td><td class="num">0.56</td></tr><tr><td>2669</td><td>CHINA OVS PPT</td><td class="num">3.25</td><td class="num">6.01</td><td class="num">43</td><td class="num">7.1</td><td class="num">1.46</td><td class="num">1.13</td></tr><tr><td>3618</td><td>CQRC BANK</td><td class="num">6.24</td><td class="num">5.72</td><td class="num">29</td><td class="num">4.9</td><td class="num">0.43</td><td class="num">0.12</td></tr><tr><td>0440</td><td>DAH SING</td><td class="num">44.62</td><td class="num">5.66</td><td class="num">43</td><td class="num">7.4</td><td class="num">0.36</td><td class="num">0.48</td></tr><tr><td>2356</td><td>DAHSING BANKING</td><td class="num">14.44</td><td class="num">5.59</td><td class="num">45</td><td class="num">8.1</td><td class="num">0.55</td><td class="num">0.67</td></tr><tr><td>0142</td><td>FIRST PACIFIC</td><td class="num">4.75</td><td class="num">5.38</td><td class="num">26</td><td class="num">4.5</td><td class="num">0.58</td><td class="num">0.78</td></tr><tr><td>0788</td><td>CHINA TOWER</td><td class="num">8.85</td><td class="num">4.91</td><td class="num">59</td><td class="num">9.9</td><td class="num">0.64</td><td class="num">0.35</td></tr><tr><td>1972</td><td>SWIREPROPERTIES</td><td class="num">23.94</td><td class="num">4.80</td><td class="num">2</td><td class="num">42.0</td><td class="num">0.51</td><td class="num">0.82</td></tr><tr><td>2328</td><td>PICC P&amp;C</td><td class="num">15.94</td><td class="num">4.79</td><td class="num">31</td><td class="num">6.3</td><td class="num">1.00</td><td class="num">0.13</td></tr><tr><td>0506</td><td>CHINA FOODS</td><td class="num">3.65</td><td class="num">4.74</td><td class="num">47</td><td class="num">9.6</td><td class="num">1.23</td><td class="num">0.52</td></tr><tr><td>3606</td><td>FUYAO GLASS</td><td class="num">53.50</td><td class="num">4.62</td><td class="num">64</td><td class="num">14.1</td><td class="num">3.13</td><td class="num">0.47</td></tr><tr><td>1523</td><td>PLOVER BAY TECH</td><td class="num">7.18</td><td class="num">4.37</td><td class="num">79</td><td class="num">20.0</td><td class="num">17.96</td><td class="num">0.49</td></tr><tr><td>1913</td><td>PRADA</td><td class="num">36.38</td><td class="num">4.01</td><td class="num">53</td><td class="num">13.1</td><td class="num">2.28</td><td class="num">0.82</td></tr></tbody></table><p class='muted'>Same Yahoo snapshot as this pack. Highlight = this name.</p></div>
+<p class='muted'>Not investment advice. Yahoo Finance snapshot 2026-10-02; tax (including PRC withholding on some H-shares) is not modeled. Indicated yield can differ from cash actually paid over the last 12 months — always match to the latest dividend notice.</p>
+    <p class="footer">Generated by <code>build_analysis_reports.py</code>. Cursor canvases are IDE-only; use these HTML pages for browsing.</p>
+  </div>
+</body>
+</html>

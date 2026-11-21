@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SOXX Gap Up — Not Filled Same Day</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+:root {
+  --bg: #f4f5f2;
+  --panel: #fff;
+  --ink: #1a1d18;
+  --muted: #5c6358;
+  --line: #d8ddd4;
+  --accent: #2f5d50;
+  --accent-soft: #e7f0ec;
+  --danger: #8b3a3a;
+  --ok: #2f5d50;
+  --warn: #8a5a18;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --sans: "Source Sans 3", "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--ink);
+  background:
+    radial-gradient(1000px 420px at 8% -8%, #e8efe9 0%, transparent 55%),
+    var(--bg);
+  line-height: 1.45;
+}
+.wrap { max-width: 1040px; margin: 0 auto; padding: 28px 22px 64px; }
+.topnav { display: flex; gap: 14px; align-items: center; margin-bottom: 18px; font-size: 13px; }
+.topnav a { color: var(--accent); font-weight: 650; text-decoration: none; }
+.topnav a:hover { text-decoration: underline; }
+.brand { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+h1 { font-size: 26px; margin: 4px 0 8px; line-height: 1.2; }
+.sub { color: var(--muted); font-size: 14px; margin: 0 0 20px; max-width: 70ch; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0 20px; }
+@media (max-width: 720px) { .stats { grid-template-columns: 1fr 1fr; } }
+.stat {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
+}
+.stat .v { font-size: 22px; font-weight: 700; color: var(--accent); }
+.stat .v.warn { color: var(--warn); }
+.stat .v.danger { color: var(--danger); }
+.stat .l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; font-weight: 700; }
+.callout {
+  background: var(--accent-soft); border: 1px solid #cfe0d7; border-radius: 10px;
+  padding: 12px 14px; margin: 14px 0 20px; font-size: 14px;
+}
+.callout.warn { background: #f7f0e4; border-color: #e5d3b0; }
+.callout strong { display: block; margin-bottom: 4px; }
+h2 { font-size: 17px; margin: 28px 0 8px; }
+h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 18px 0 6px; }
+.panel {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px 16px; margin: 10px 0 16px;
+}
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 8px 8px; border-top: 1px solid #eef1ea; text-align: left; vertical-align: top; }
+th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 700; border-top: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr.hl td { background: #eef6f2; }
+tr.bad td { background: #f8eeee; }
+.bars { display: grid; gap: 8px; margin: 8px 0 4px; }
+.bar-row { display: grid; grid-template-columns: 56px 1fr 64px; gap: 10px; align-items: center; font-size: 13px; }
+.bar-track { height: 10px; background: #e8ece4; border-radius: 999px; overflow: hidden; position: relative; }
+.bar-fill { height: 100%; background: var(--accent); border-radius: 999px; }
+.bar-fill.neg { background: var(--danger); }
+.chart-wrap { position: relative; height: 280px; margin: 8px 0 4px; }
+.muted { color: var(--muted); font-size: 12px; }
+code { font-family: var(--mono); font-size: 11px; background: #efece6; padding: 1px 5px; border-radius: 4px; }
+.footer { margin-top: 36px; font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topnav">
+      <a href="../analysis_library.html">← Analysis library</a>
+      <span class="muted">HTML report (opens in browser)</span>
+    </div>
+    <div class="brand">Research desk</div>
+    <h1>SOXX Gap Up — Not Filled Same Day</h1>
+    <p class="sub">Last 100 gap-ups · 58 no same-day fill · 2024-05-03 → 2026-08-21</p>
+    <div class="stats"><div class="stat"><div class="v">58</div><div class="l">No same-day fill</div></div><div class="stat"><div class="v warn">51.7%</div><div class="l">Still fill within 5d</div></div><div class="stat"><div class="v">+0.1%</div><div class="l">Mean next 5d</div></div><div class="stat"><div class="v">+4.5%</div><div class="l">Mean next 21d</div></div></div>
+<div class="callout"><strong>Takeaway</strong>
+        After gap-up with no same-day fill, average path is mild short-term and stronger by ~1 month.
+        Split dominates: later fill ≤5d mean next 5d -3.4%;
+        no fill ≤5d mean +3.8% (92.9% up).
+        </div>
+<h2>Forward return from gap-day close</h2>
+
+    <div class="panel"><div class="chart-wrap"><canvas id="paths"></canvas></div></div>
+    <script>
+      (() => {
+        const cfg = {"type": "bar", "data": {"labels": ["1d", "2d", "3d", "5d", "10d", "21d"], "datasets": [{"label": "All no same-day fill", "data": [0.351, 0.404, 0.24, 0.071, 1.909, 4.475], "backgroundColor": "#4a7ab5"}, {"label": "Later fills \u22645d", "data": [-0.384, -1.212, -2.273, -3.392, -0.515, 0.901], "backgroundColor": "#c4a35a"}, {"label": "No fill \u22645d", "data": [1.139, 2.135, 2.932, 3.781, 4.507, 8.304], "backgroundColor": "#2f5d50"}]}, "options": {"responsive": true, "maintainAspectRatio": false}};
+        const ctx = document.getElementById('paths');
+        if (ctx && window.Chart) new Chart(ctx, cfg);
+      })();
+    </script>
+    
+<h2>Return distribution</h2><div class='panel'><table>
+<tr><th>Horizon</th><th class='num'>p25</th><th class='num'>Median</th><th class='num'>p75</th><th class='num'>Mean</th></tr>
+<tr><td>1d</td><td class='num'>-0.8%</td><td class='num'>+0.2%</td><td class='num'>+1.8%</td><td class='num'>+0.4%</td></tr>
+<tr><td>5d</td><td class='num'>-4.0%</td><td class='num'>+0.8%</td><td class='num'>+3.8%</td><td class='num'>+0.1%</td></tr>
+<tr><td>10d</td><td class='num'>-2.1%</td><td class='num'>+0.7%</td><td class='num'>+6.1%</td><td class='num'>+1.9%</td></tr>
+<tr><td>21d</td><td class='num'>-3.8%</td><td class='num'>+2.8%</td><td class='num'>+9.2%</td><td class='num'>+4.5%</td></tr>
+</table></div>
+<h2>Events (no same-day fill)</h2><div class='panel'><table>
+<tr><th>Date</th><th class='num'>Gap</th><th class='num'>Day vs open</th><th>Fill≤5d</th><th class='num'>Next 1d</th><th class='num'>Next 5d</th><th class='num'>Next 21d</th></tr>
+<tr class='bad'><td>2025-05-27</td><td class='num'>+1.6%</td><td class='num'>+1.1%</td><td>Yes</td><td class='num'>-0.5%</td><td class='num'>+2.1%</td><td class='num'>+14.2%</td></tr>
+<tr class='hl'><td>2025-06-24</td><td class='num'>+1.2%</td><td class='num'>+2.0%</td><td>No</td><td class='num'>+0.9%</td><td class='num'>+1.1%</td><td class='num'>+2.7%</td></tr>
+<tr class='bad'><td>2025-07-15</td><td class='num'>+1.7%</td><td class='num'>-1.0%</td><td>Yes</td><td class='num'>-0.3%</td><td class='num'>-1.1%</td><td class='num'>+3.1%</td></tr>
+<tr class='bad'><td>2025-07-28</td><td class='num'>+1.1%</td><td class='num'>+0.6%</td><td>Yes</td><td class='num'>+0.2%</td><td class='num'>-2.2%</td><td class='num'>+2.1%</td></tr>
+<tr class='hl'><td>2025-08-07</td><td class='num'>+1.9%</td><td class='num'>-0.5%</td><td>No</td><td class='num'>+0.8%</td><td class='num'>+5.5%</td><td class='num'>+3.3%</td></tr>
+<tr class='bad'><td>2025-08-13</td><td class='num'>+0.7%</td><td class='num'>+0.7%</td><td>Yes</td><td class='num'>+0.1%</td><td class='num'>-4.0%</td><td class='num'>+0.7%</td></tr>
+<tr class='hl'><td>2025-09-10</td><td class='num'>+1.3%</td><td class='num'>+0.2%</td><td>No</td><td class='num'>+0.7%</td><td class='num'>+2.0%</td><td class='num'>+14.5%</td></tr>
+<tr class='hl'><td>2025-09-18</td><td class='num'>+1.7%</td><td class='num'>+0.9%</td><td>No</td><td class='num'>-0.6%</td><td class='num'>+0.2%</td><td class='num'>+7.7%</td></tr>
+<tr class='hl'><td>2025-10-02</td><td class='num'>+1.7%</td><td class='num'>+0.1%</td><td>No</td><td class='num'>-0.6%</td><td class='num'>+3.0%</td><td class='num'>+8.8%</td></tr>
+<tr class='bad'><td>2025-10-06</td><td class='num'>+2.3%</td><td class='num'>-0.9%</td><td>Yes</td><td class='num'>-2.2%</td><td class='num'>-1.2%</td><td class='num'>+2.7%</td></tr>
+<tr class='hl'><td>2025-10-24</td><td class='num'>+1.5%</td><td class='num'>-0.2%</td><td>No</td><td class='num'>+2.8%</td><td class='num'>+3.6%</td><td class='num'>-4.4%</td></tr>
+<tr class='hl'><td>2025-10-27</td><td class='num'>+1.1%</td><td class='num'>+0.9%</td><td>No</td><td class='num'>+0.1%</td><td class='num'>+1.4%</td><td class='num'>-6.7%</td></tr>
+<tr class='bad'><td>2025-10-29</td><td class='num'>+1.3%</td><td class='num'>-0.1%</td><td>Yes</td><td class='num'>-1.4%</td><td class='num'>-1.3%</td><td class='num'>-4.2%</td></tr>
+<tr class='bad'><td>2025-11-10</td><td class='num'>+2.7%</td><td class='num'>-0.1%</td><td>Yes</td><td class='num'>-2.3%</td><td class='num'>-6.1%</td><td class='num'>+4.7%</td></tr>
+<tr class='hl'><td>2025-11-26</td><td class='num'>+0.8%</td><td class='num'>+1.6%</td><td>No</td><td class='num'>+1.8%</td><td class='num'>+5.1%</td><td class='num'>+4.8%</td></tr>
+<tr class='bad'><td>2025-12-22</td><td class='num'>+1.7%</td><td class='num'>-0.9%</td><td>Yes</td><td class='num'>+0.4%</td><td class='num'>+0.4%</td><td class='num'>+13.5%</td></tr>
+<tr class='hl'><td>2026-01-02</td><td class='num'>+0.8%</td><td class='num'>+1.7%</td><td>No</td><td class='num'>+1.4%</td><td class='num'>+4.8%</td><td class='num'>+10.2%</td></tr>
+<tr class='hl'><td>2026-01-05</td><td class='num'>+1.5%</td><td class='num'>-0.8%</td><td>No</td><td class='num'>+3.2%</td><td class='num'>+3.9%</td><td class='num'>+3.9%</td></tr>
+<tr class='hl'><td>2026-01-15</td><td class='num'>+3.3%</td><td class='num'>-1.7%</td><td>No</td><td class='num'>+1.6%</td><td class='num'>+2.2%</td><td class='num'>+5.0%</td></tr>
+<tr class='bad'><td>2026-01-27</td><td class='num'>+0.8%</td><td class='num'>+0.8%</td><td>Yes</td><td class='num'>+2.7%</td><td class='num'>-1.5%</td><td class='num'>+1.6%</td></tr>
+<tr class='bad'><td>2026-01-28</td><td class='num'>+1.5%</td><td class='num'>+0.5%</td><td>Yes</td><td class='num'>+0.2%</td><td class='num'>-8.3%</td><td class='num'>-2.3%</td></tr>
+<tr class='hl'><td>2026-02-06</td><td class='num'>+0.6%</td><td class='num'>+3.3%</td><td>No</td><td class='num'>+1.2%</td><td class='num'>+1.8%</td><td class='num'>-2.8%</td></tr>
+<tr class='bad'><td>2026-04-01</td><td class='num'>+1.3%</td><td class='num'>+1.5%</td><td>Yes</td><td class='num'>+0.3%</td><td class='num'>+11.8%</td><td class='num'>+37.6%</td></tr>
+<tr class='hl'><td>2026-04-08</td><td class='num'>+5.7%</td><td class='num'>+0.7%</td><td>No</td><td class='num'>+2.2%</td><td class='num'>+8.5%</td><td class='num'>+32.9%</td></tr>
+<tr class='hl'><td>2026-04-10</td><td class='num'>+1.0%</td><td class='num'>+1.0%</td><td>No</td><td class='num'>+1.7%</td><td class='num'>+7.5%</td><td class='num'>+37.8%</td></tr>
+<tr class='hl'><td>2026-04-17</td><td class='num'>+1.4%</td><td class='num'>+0.6%</td><td>No</td><td class='num'>+0.4%</td><td class='num'>+11.0%</td><td class='num'>+19.3%</td></tr>
+<tr class='bad'><td>2026-04-23</td><td class='num'>+0.7%</td><td class='num'>+1.3%</td><td>Yes</td><td class='num'>+4.7%</td><td class='num'>+4.6%</td><td class='num'>+21.8%</td></tr>
+<tr class='bad'><td>2026-04-24</td><td class='num'>+2.5%</td><td class='num'>+0.9%</td><td>Yes</td><td class='num'>-1.3%</td><td class='num'>+0.9%</td><td class='num'>+23.5%</td></tr>
+<tr class='hl'><td>2026-05-06</td><td class='num'>+2.4%</td><td class='num'>+1.8%</td><td>No</td><td class='num'>-2.9%</td><td class='num'>+4.2%</td><td class='num'>+6.5%</td></tr>
+<tr class='bad'><td>2026-05-11</td><td class='num'>+0.7%</td><td class='num'>+1.7%</td><td>Yes</td><td class='num'>-3.1%</td><td class='num'>-6.9%</td><td class='num'>+1.6%</td></tr>
+<tr class='hl'><td>2026-05-22</td><td class='num'>+1.0%</td><td class='num'>+1.0%</td><td>No</td><td class='num'>+6.1%</td><td class='num'>+6.4%</td><td class='num'>+11.9%</td></tr>
+<tr class='hl'><td>2026-05-26</td><td class='num'>+2.8%</td><td class='num'>+2.4%</td><td>No</td><td class='num'>-1.1%</td><td class='num'>+6.1%</td><td class='num'>+9.7%</td></tr>
+<tr class='bad'><td>2026-06-02</td><td class='num'>+1.2%</td><td class='num'>+3.4%</td><td>Yes</td><td class='num'>+1.8%</td><td class='num'>-7.1%</td><td class='num'>-6.4%</td></tr>
+<tr class='bad'><td>2026-06-15</td><td class='num'>+3.3%</td><td class='num'>+0.9%</td><td>Yes</td><td class='num'>-5.9%</td><td class='num'>-4.0%</td><td class='num'>-15.6%</td></tr>
+<tr class='bad'><td>2026-06-18</td><td class='num'>+0.7%</td><td class='num'>+2.1%</td><td>Yes</td><td class='num'>+2.4%</td><td class='num'>-7.7%</td><td class='num'>-13.6%</td></tr>
+<tr class='bad'><td>2026-07-09</td><td class='num'>+4.4%</td><td class='num'>-1.3%</td><td>Yes</td><td class='num'>-0.1%</td><td class='num'>-8.8%</td><td class='num'>-6.6%</td></tr>
+<tr class='bad'><td>2026-07-21</td><td class='num'>+1.8%</td><td class='num'>+0.7%</td><td>Yes</td><td class='num'>+0.5%</td><td class='num'>-11.1%</td><td class='num'>-6.0%</td></tr>
+<tr class='hl'><td>2026-08-04</td><td class='num'>+3.6%</td><td class='num'>+2.4%</td><td>No</td><td class='num'>-2.1%</td><td class='num'>-1.5%</td><td class='num'>-7.5%</td></tr>
+<tr class='bad'><td>2026-08-12</td><td class='num'>+2.7%</td><td class='num'>-1.2%</td><td>Yes</td><td class='num'>+0.8%</td><td class='num'>-4.9%</td><td class='num'>-3.6%</td></tr>
+<tr class='bad'><td>2026-08-17</td><td class='num'>+0.9%</td><td class='num'>+0.2%</td><td>Yes</td><td class='num'>-5.0%</td><td class='num'>-9.5%</td><td class='num'>-10.2%</td></tr>
+</table></div>
+    <p class="footer">Generated by <code>build_analysis_reports.py</code>. Cursor canvases are IDE-only; use these HTML pages for browsing.</p>
+  </div>
+</body>
+</html>

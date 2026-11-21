@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HK Dividend Pack — Ranked Screen</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+:root {
+  --bg: #f4f5f2;
+  --panel: #fff;
+  --ink: #1a1d18;
+  --muted: #5c6358;
+  --line: #d8ddd4;
+  --accent: #2f5d50;
+  --accent-soft: #e7f0ec;
+  --danger: #8b3a3a;
+  --ok: #2f5d50;
+  --warn: #8a5a18;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --sans: "Source Sans 3", "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--ink);
+  background:
+    radial-gradient(1000px 420px at 8% -8%, #e8efe9 0%, transparent 55%),
+    var(--bg);
+  line-height: 1.45;
+}
+.wrap { max-width: 1040px; margin: 0 auto; padding: 28px 22px 64px; }
+.topnav { display: flex; gap: 14px; align-items: center; margin-bottom: 18px; font-size: 13px; }
+.topnav a { color: var(--accent); font-weight: 650; text-decoration: none; }
+.topnav a:hover { text-decoration: underline; }
+.brand { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+h1 { font-size: 26px; margin: 4px 0 8px; line-height: 1.2; }
+.sub { color: var(--muted); font-size: 14px; margin: 0 0 20px; max-width: 70ch; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0 20px; }
+@media (max-width: 720px) { .stats { grid-template-columns: 1fr 1fr; } }
+.stat {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
+}
+.stat .v { font-size: 22px; font-weight: 700; color: var(--accent); }
+.stat .v.warn { color: var(--warn); }
+.stat .v.danger { color: var(--danger); }
+.stat .l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; font-weight: 700; }
+.callout {
+  background: var(--accent-soft); border: 1px solid #cfe0d7; border-radius: 10px;
+  padding: 12px 14px; margin: 14px 0 20px; font-size: 14px;
+}
+.callout.warn { background: #f7f0e4; border-color: #e5d3b0; }
+.callout strong { display: block; margin-bottom: 4px; }
+h2 { font-size: 17px; margin: 28px 0 8px; }
+h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 18px 0 6px; }
+.panel {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px 16px; margin: 10px 0 16px;
+}
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 8px 8px; border-top: 1px solid #eef1ea; text-align: left; vertical-align: top; }
+th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 700; border-top: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr.hl td { background: #eef6f2; }
+tr.bad td { background: #f8eeee; }
+.bars { display: grid; gap: 8px; margin: 8px 0 4px; }
+.bar-row { display: grid; grid-template-columns: 56px 1fr 64px; gap: 10px; align-items: center; font-size: 13px; }
+.bar-track { height: 10px; background: #e8ece4; border-radius: 999px; overflow: hidden; position: relative; }
+.bar-fill { height: 100%; background: var(--accent); border-radius: 999px; }
+.bar-fill.neg { background: var(--danger); }
+.chart-wrap { position: relative; height: 280px; margin: 8px 0 4px; }
+.muted { color: var(--muted); font-size: 12px; }
+code { font-family: var(--mono); font-size: 11px; background: #efece6; padding: 1px 5px; border-radius: 4px; }
+.footer { margin-top: 36px; font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topnav">
+      <a href="../analysis_library.html">← Analysis library</a>
+      <span class="muted">HTML report (opens in browser)</span>
+    </div>
+    <div class="brand">Research desk</div>
+    <h1>HK Dividend Pack — Ranked Screen</h1>
+    <p class="sub">29 Hong Kong names · Yahoo snapshot 2026-10-02</p>
+    <div class="stats"><div class="stat"><div class="v">29</div><div class="l">Names in pack</div></div><div class="stat"><div class="v">6.5%</div><div class="l">Median indicated yield</div></div><div class="stat"><div class="v">12.7%</div><div class="l">Highest (0564)</div></div><div class="stat"><div class="v">2026-10-02</div><div class="l">Snapshot date</div></div></div>
+<div class="callout"><strong>How to use this pack</strong>
+        Ranked Yahoo indicated yields for the HK dividend screen. Open a ticker report for DPS history,
+        payout, cash, and valuation. Prefer names where calendar-year DPS yield, trailing yield, and
+        indicated yield roughly agree — large gaps usually mean a stale print or a special dividend.
+        </div>
+<div class="panel"><div class="chart-wrap" style="height:720px"><canvas id="packYld"></canvas></div></div>
+<script>
+      (() => {
+        const cfg = {"type": "bar", "data": {"labels": ["0564", "3316", "2368", "3968", "0762", "8371", "3998", "0640", "3360", "2230", "0598", "0752", "0168", "6690", "0874", "0728", "0857", "2669", "3618", "0440", "2356", "0142", "0788", "1972", "2328", "0506", "3606", "1523", "1913"], "datasets": [{"label": "Indicated yield %", "data": [12.72, 9.08, 8.97, 8.66, 8.52, 8.5, 7.81, 7.81, 7.76, 7.58, 7.47, 6.82, 6.74, 6.52, 6.48, 6.44, 6.22, 6.01, 5.72, 5.66, 5.59, 5.38, 4.91, 4.8, 4.79, 4.74, 4.62, 4.37, 4.01], "backgroundColor": "#2f5d50"}]}, "options": {"indexAxis": "y", "responsive": true, "maintainAspectRatio": false, "plugins": {"legend": {"display": false}}, "scales": {"x": {"title": {"display": true, "text": "Indicated dividend yield (%)"}}}}};
+        const ctx = document.getElementById('packYld');
+        if (ctx && window.Chart) new Chart(ctx, cfg);
+      })();
+    </script>
+<h2>Ranked table</h2><div class='panel'><table><thead><tr><th>Ticker</th><th>Name</th><th>Industry</th><th class='num'>Price</th><th class='num'>Ind. yld %</th><th class='num'>Cal. yld %</th><th class='num'>Payout %</th><th class='num'>P/E</th><th class='num'>P/B</th><th class='num'>Mkt cap</th></tr></thead><tbody><tr><td><a href="0564-zczl-dividend.html">0564</a></td><td>ZCZL</td><td>Farm &amp; Heavy Construction Machinery</td><td class="num">11.04</td><td class="num">12.72</td><td class="num">12.97</td><td class="num">64</td><td class="num">4.9</td><td class="num">0.70</td><td class="num">HK$19.7B</td></tr><tr><td><a href="3316-binjiang-ser-dividend.html">3316</a></td><td>BINJIANG SER</td><td>Real Estate Services</td><td class="num">20.34</td><td class="num">9.08</td><td class="num">4.81</td><td class="num">72</td><td class="num">7.9</td><td class="num">2.80</td><td class="num">HK$5.6B</td></tr><tr><td><a href="2368-eagle-nice-dividend.html">2368</a></td><td>EAGLE NICE</td><td>Apparel Manufacturing</td><td class="num">2.90</td><td class="num">8.97</td><td class="num">0.69</td><td class="num">93</td><td class="num">9.7</td><td class="num">0.90</td><td class="num">HK$1.7B</td></tr><tr><td><a href="3968-cm-bank-dividend.html">3968</a></td><td>CM BANK</td><td>Banks - Regional</td><td class="num">50.75</td><td class="num">8.66</td><td class="num">4.48</td><td class="num">34</td><td class="num">7.5</td><td class="num">0.96</td><td class="num">HK$1279.9B</td></tr><tr><td><a href="0762-china-unicom-dividend.html">0762</a></td><td>CHINA UNICOM</td><td>Telecom Services</td><td class="num">5.42</td><td class="num">8.52</td><td class="num">2.81</td><td class="num">80</td><td class="num">8.9</td><td class="num">0.38</td><td class="num">HK$165.7B</td></tr><tr><td><a href="8371-tastegourmet-gp-dividend.html">8371</a></td><td>TASTEGOURMET GP</td><td>Restaurants</td><td class="num">2.08</td><td class="num">8.50</td><td class="num">4.33</td><td class="num">52</td><td class="num">6.7</td><td class="num">2.37</td><td class="num">HK$0.8B</td></tr><tr><td><a href="3998-bosideng-dividend.html">3998</a></td><td>BOSIDENG</td><td>Apparel Manufacturing</td><td class="num">3.94</td><td class="num">7.81</td><td class="num">6.35</td><td class="num">75</td><td class="num">9.8</td><td class="num">2.14</td><td class="num">HK$45.9B</td></tr><tr><td><a href="0640-infinity-dev-dividend.html">0640</a></td><td>INFINITY DEV</td><td>Specialty Chemicals</td><td class="num">2.31</td><td class="num">7.81</td><td class="num">7.88</td><td class="num">52</td><td class="num">5.9</td><td class="num">1.03</td><td class="num">HK$0.7B</td></tr><tr><td><a href="3360-fe-horizon-dividend.html">3360</a></td><td>FE HORIZON</td><td>Credit Services</td><td class="num">6.25</td><td class="num">7.76</td><td class="num">8.95</td><td class="num">60</td><td class="num">6.4</td><td class="num">0.49</td><td class="num">HK$29.7B</td></tr><tr><td><a href="2230-medialink-group-dividend.html">2230</a></td><td>MEDIALINK GROUP</td><td>Entertainment</td><td class="num">0.19</td><td class="num">7.58</td><td class="num">1.40</td><td class="num">51</td><td class="num">6.4</td><td class="num">0.58</td><td class="num">HK$0.4B</td></tr><tr><td><a href="0598-sinotrans-dividend.html">0598</a></td><td>SINOTRANS</td><td>Integrated Freight &amp; Logistics</td><td class="num">4.42</td><td class="num">7.47</td><td class="num">7.64</td><td class="num">56</td><td class="num">7.1</td><td class="num">0.66</td><td class="num">HK$31.7B</td></tr><tr><td><a href="0752-pico-far-east-dividend.html">0752</a></td><td>PICO FAR EAST</td><td>Advertising Agencies</td><td class="num">2.12</td><td class="num">6.82</td><td class="num">8.96</td><td class="num">42</td><td class="num">6.2</td><td class="num">1.02</td><td class="num">HK$2.7B</td></tr><tr><td><a href="0168-tsingtao-br-500-dividend.html">0168</a></td><td>TSINGTAO BR-500</td><td>Beverages - Brewers</td><td class="num">39.08</td><td class="num">6.74</td><td class="num">6.91</td><td class="num">69</td><td class="num">9.9</td><td class="num">1.45</td><td class="num">HK$53.3B</td></tr><tr><td><a href="6690-haier-smarthome-dividend.html">6690</a></td><td>HAIER SMARTHOME</td><td>Furnishings, Fixtures &amp; Appliances</td><td class="num">20.06</td><td class="num">6.52</td><td class="num">5.11</td><td class="num">14</td><td class="num">8.9</td><td class="num">1.32</td><td class="num">HK$186.6B</td></tr><tr><td><a href="0874-baiyunshan-ph-dividend.html">0874</a></td><td>BAIYUNSHAN PH</td><td>Medical Distribution</td><td class="num">12.99</td><td class="num">6.48</td><td class="num">6.64</td><td class="num">54</td><td class="num">7.1</td><td class="num">0.46</td><td class="num">HK$21.1B</td></tr><tr><td><a href="0728-china-telecom-dividend.html">0728</a></td><td>CHINA TELECOM</td><td>Telecom Services</td><td class="num">4.44</td><td class="num">6.44</td><td class="num">6.52</td><td class="num">85</td><td class="num">12.0</td><td class="num">0.74</td><td class="num">HK$406.3B</td></tr><tr><td><a href="0857-petrochina-dividend.html">0857</a></td><td>PETROCHINA</td><td>Oil &amp; Gas Integrated</td><td class="num">9.54</td><td class="num">6.22</td><td class="num">6.16</td><td class="num">49</td><td class="num">8.5</td><td class="num">0.91</td><td class="num">HK$1746.9B</td></tr><tr><td><a href="2669-china-ovs-ppt-dividend.html">2669</a></td><td>CHINA OVS PPT</td><td>Real Estate Services</td><td class="num">3.25</td><td class="num">6.01</td><td class="num">6.15</td><td class="num">43</td><td class="num">7.1</td><td class="num">1.46</td><td class="num">HK$10.7B</td></tr><tr><td><a href="3618-cqrc-bank-dividend.html">3618</a></td><td>CQRC BANK</td><td>Banks - Regional</td><td class="num">6.24</td><td class="num">5.72</td><td class="num">5.78</td><td class="num">29</td><td class="num">4.9</td><td class="num">0.43</td><td class="num">HK$70.8B</td></tr><tr><td><a href="0440-dah-sing-dividend.html">0440</a></td><td>DAH SING</td><td>Banks - Regional</td><td class="num">44.62</td><td class="num">5.66</td><td class="num">5.87</td><td class="num">43</td><td class="num">7.4</td><td class="num">0.36</td><td class="num">HK$14.2B</td></tr><tr><td><a href="2356-dahsing-banking-dividend.html">2356</a></td><td>DAHSING BANKING</td><td>Banks - Regional</td><td class="num">14.44</td><td class="num">5.59</td><td class="num">5.82</td><td class="num">45</td><td class="num">8.1</td><td class="num">0.55</td><td class="num">HK$20.3B</td></tr><tr><td><a href="0142-first-pacific-dividend.html">0142</a></td><td>FIRST PACIFIC</td><td>Packaged Foods</td><td class="num">4.75</td><td class="num">5.38</td><td class="num">5.68</td><td class="num">26</td><td class="num">4.5</td><td class="num">0.58</td><td class="num">HK$20.3B</td></tr><tr><td><a href="0788-china-tower-dividend.html">0788</a></td><td>CHINA TOWER</td><td>Telecom Services</td><td class="num">8.85</td><td class="num">4.91</td><td class="num">6.70</td><td class="num">59</td><td class="num">9.9</td><td class="num">0.64</td><td class="num">HK$154.7B</td></tr><tr><td><a href="1972-swireproperties-dividend.html">1972</a></td><td>SWIREPROPERTIES</td><td>Real Estate Services</td><td class="num">23.94</td><td class="num">4.80</td><td class="num">4.89</td><td class="num">2</td><td class="num">42.0</td><td class="num">0.51</td><td class="num">HK$137.8B</td></tr><tr><td><a href="2328-picc-p-c-dividend.html">2328</a></td><td>PICC P&amp;C</td><td>Insurance - Property &amp; Casualty</td><td class="num">15.94</td><td class="num">4.79</td><td class="num">3.17</td><td class="num">31</td><td class="num">6.3</td><td class="num">1.00</td><td class="num">HK$354.5B</td></tr><tr><td><a href="0506-china-foods-dividend.html">0506</a></td><td>CHINA FOODS</td><td>Beverages - Non-Alcoholic</td><td class="num">3.65</td><td class="num">4.74</td><td class="num">4.85</td><td class="num">47</td><td class="num">9.6</td><td class="num">1.23</td><td class="num">HK$10.2B</td></tr><tr><td><a href="3606-fuyao-glass-dividend.html">3606</a></td><td>FUYAO GLASS</td><td>Auto Parts</td><td class="num">53.50</td><td class="num">4.62</td><td class="num">4.72</td><td class="num">64</td><td class="num">14.1</td><td class="num">3.13</td><td class="num">HK$139.6B</td></tr><tr><td><a href="1523-plover-bay-tech-dividend.html">1523</a></td><td>PLOVER BAY TECH</td><td>Communication Equipment</td><td class="num">7.18</td><td class="num">4.37</td><td class="num">5.27</td><td class="num">79</td><td class="num">20.0</td><td class="num">17.96</td><td class="num">HK$7.9B</td></tr><tr><td><a href="1913-prada-dividend.html">1913</a></td><td>PRADA</td><td>Luxury Goods</td><td class="num">36.38</td><td class="num">4.01</td><td class="num">4.13</td><td class="num">53</td><td class="num">13.1</td><td class="num">2.28</td><td class="num">HK$93.1B</td></tr></tbody></table><p class='muted'>Ind. yld = Yahoo dividendYield. Cal. yld = sum of Yahoo ex-date DPS in the latest calendar year / price (year may be YTD).</p></div>
+<p class='muted'>Also see the deeper 0941.HK note: <a href='0941-china-mobile-dividend.html'>China Mobile dividend research</a>.</p>
+    <p class="footer">Generated by <code>build_analysis_reports.py</code>. Cursor canvases are IDE-only; use these HTML pages for browsing.</p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SPX Near Highs with Weak Breadth</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+:root {
+  --bg: #f4f5f2;
+  --panel: #fff;
+  --ink: #1a1d18;
+  --muted: #5c6358;
+  --line: #d8ddd4;
+  --accent: #2f5d50;
+  --accent-soft: #e7f0ec;
+  --danger: #8b3a3a;
+  --ok: #2f5d50;
+  --warn: #8a5a18;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --sans: "Source Sans 3", "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--ink);
+  background:
+    radial-gradient(1000px 420px at 8% -8%, #e8efe9 0%, transparent 55%),
+    var(--bg);
+  line-height: 1.45;
+}
+.wrap { max-width: 1040px; margin: 0 auto; padding: 28px 22px 64px; }
+.topnav { display: flex; gap: 14px; align-items: center; margin-bottom: 18px; font-size: 13px; }
+.topnav a { color: var(--accent); font-weight: 650; text-decoration: none; }
+.topnav a:hover { text-decoration: underline; }
+.brand { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+h1 { font-size: 26px; margin: 4px 0 8px; line-height: 1.2; }
+.sub { color: var(--muted); font-size: 14px; margin: 0 0 20px; max-width: 70ch; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0 20px; }
+@media (max-width: 720px) { .stats { grid-template-columns: 1fr 1fr; } }
+.stat {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
+}
+.stat .v { font-size: 22px; font-weight: 700; color: var(--accent); }
+.stat .v.warn { color: var(--warn); }
+.stat .v.danger { color: var(--danger); }
+.stat .l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; font-weight: 700; }
+.callout {
+  background: var(--accent-soft); border: 1px solid #cfe0d7; border-radius: 10px;
+  padding: 12px 14px; margin: 14px 0 20px; font-size: 14px;
+}
+.callout.warn { background: #f7f0e4; border-color: #e5d3b0; }
+.callout strong { display: block; margin-bottom: 4px; }
+h2 { font-size: 17px; margin: 28px 0 8px; }
+h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 18px 0 6px; }
+.panel {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px 16px; margin: 10px 0 16px;
+}
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 8px 8px; border-top: 1px solid #eef1ea; text-align: left; vertical-align: top; }
+th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 700; border-top: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr.hl td { background: #eef6f2; }
+tr.bad td { background: #f8eeee; }
+.bars { display: grid; gap: 8px; margin: 8px 0 4px; }
+.bar-row { display: grid; grid-template-columns: 56px 1fr 64px; gap: 10px; align-items: center; font-size: 13px; }
+.bar-track { height: 10px; background: #e8ece4; border-radius: 999px; overflow: hidden; position: relative; }
+.bar-fill { height: 100%; background: var(--accent); border-radius: 999px; }
+.bar-fill.neg { background: var(--danger); }
+.chart-wrap { position: relative; height: 280px; margin: 8px 0 4px; }
+.muted { color: var(--muted); font-size: 12px; }
+code { font-family: var(--mono); font-size: 11px; background: #efece6; padding: 1px 5px; border-radius: 4px; }
+.footer { margin-top: 36px; font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topnav">
+      <a href="../analysis_library.html">← Analysis library</a>
+      <span class="muted">HTML report (opens in browser)</span>
+    </div>
+    <div class="brand">Research desk</div>
+    <h1>SPX Near Highs with Weak Breadth</h1>
+    <p class="sub">SPX near 252d high + weak %&gt;50MA + NHL&lt;0 · 1997-01-29 → 2026-09-29</p>
+    <div class="stats"><div class="stat"><div class="v danger">24%</div><div class="l">% above 50MA</div></div><div class="stat"><div class="v danger">-19</div><div class="l">NH − NL</div></div><div class="stat"><div class="v">-1.5%</div><div class="l">SPX vs 252d high</div></div><div class="stat"><div class="v">18</div><div class="l">Primary episodes</div></div></div>
+<div class="callout"><strong>Current setup</strong>
+        As of 2026-09-29: SPX 7679
+        (-1.5% from 252d high),
+        <strong>23.6%</strong> of constituents above 50-SMA,
+        new highs 0 / new lows 19
+        (net <strong>-19</strong>).
+        Primary signal ACTIVE
+        since 2026-09-18
+        (8 sessions).
+        Today is in the <em>extreme</em> bucket (pct50 &lt; 40) — almost unprecedented historically.
+        </div>
+<div class="callout warn"><strong>How rare is this when SPX is near highs?</strong>
+        Among 3286 days with SPX within 2% of its 252d high
+        (1997-01-29 → 2026-09-29):
+        median % above 50MA = 72.75%
+        (p10 = 55.48%).
+        Days with pct50 &lt; 50: 3.8%;
+        pct50 &lt; 40: 0.5%;
+        NHL &lt; 0: 1.8%;
+        both weak (pct50 &lt; 50 and NHL &lt; 0): 0.9%.
+        So the research claim describes a real, rare divergence — not normal tape.
+        </div>
+<h2>Forward SPX after weak breadth near highs</h2>
+<p class='muted'>Primary: within 2% of high + %&gt;50MA &lt; 50 + NHL &lt; 0. n=18 episodes (first day of each run). Control = near high only (n=267).</p>
+
+    <div class="panel"><div class="chart-wrap"><canvas id="fwdPrimary"></canvas></div></div>
+    <script>
+      (() => {
+        const cfg = {"type": "bar", "data": {"labels": ["10d", "1m", "3m", "6m", "1y"], "datasets": [{"label": "Signal median %", "data": [1.19, 1.58, 3.49, 3.88, 1.21], "backgroundColor": "#8a5a18"}, {"label": "Near-high control median %", "data": [0.5, 0.67, 2.25, 5.17, 9.8], "backgroundColor": "#6a9a8c"}, {"label": "Unconditional baseline median %", "data": [0.69, 1.27, 3.28, 5.73, 11.73], "backgroundColor": "#2f5d50"}]}, "options": {"responsive": true, "maintainAspectRatio": false, "plugins": {"legend": {"position": "top"}}, "scales": {"y": {"title": {"display": true, "text": "SPX forward return (%)"}}}}};
+        const ctx = document.getElementById('fwdPrimary');
+        if (ctx && window.Chart) new Chart(ctx, cfg);
+      })();
+    </script>
+    
+
+    <div class="panel"><div class="chart-wrap"><canvas id="upPrimary"></canvas></div></div>
+    <script>
+      (() => {
+        const cfg = {"type": "bar", "data": {"labels": ["10d", "1m", "3m", "6m", "1y"], "datasets": [{"label": "% episodes SPX up", "data": [64.7, 60.0, 66.7, 83.3, 55.6], "backgroundColor": "#4a7ab5"}]}, "options": {"responsive": true, "maintainAspectRatio": false, "plugins": {"legend": {"display": false}}, "scales": {"y": {"min": 0, "max": 100}}}};
+        const ctx = document.getElementById('upPrimary');
+        if (ctx && window.Chart) new Chart(ctx, cfg);
+      })();
+    </script>
+    
+<div class="callout warn"><strong>Primary base rate (n=18)</strong>
+        After this divergence, SPX median forwards were still
+        <strong>positive</strong>: 10d +1.2%,
+        1m +1.6% (60.0% up),
+        3m +3.5% (66.7% up),
+        6m +3.9%, 1y +1.2%.
+        Vs near-high control 3m med +2.2%
+        and unconditional 3m med +3.3%.
+        Weak breadth near highs was a yellow flag for <em>narrow leadership</em>,
+        not a reliable “index must drop” trigger at this threshold.
+        </div>
+<h2>Extreme cut (pct50 &lt; 40) — closest to today</h2>
+<div class="callout"><strong>n=3 episodes only</strong>
+        Dates: 2024-12-27, 2026-09-11, 2026-09-18.
+        Completed history is basically the Dec-2024 episode
+        (3m -5.7%, 1y +14.7%)
+        plus the current run — too few to pin a base rate.
+        Today's 24% above 50MA with NHL -19
+        while within 2% of the high sits in the far left tail of history.
+        </div>
+<h2>Broader analogue: within 3% of high + pct50 &lt; 40 + NHL &lt; 0</h2>
+<p class='muted'>n=21 episodes — more history, slightly less extreme.</p>
+
+    <div class="panel"><div class="chart-wrap"><canvas id="fwdLoose"></canvas></div></div>
+    <script>
+      (() => {
+        const cfg = {"type": "bar", "data": {"labels": ["10d", "1m", "3m", "6m", "1y"], "datasets": [{"label": "Median SPX %", "data": [0.6, 1.88, 3.64, 6.33, 17.17], "backgroundColor": "#8a5a18"}, {"label": "Baseline median %", "data": [0.69, 1.27, 3.28, 5.73, 11.73], "backgroundColor": "#2f5d50"}]}, "options": {"responsive": true, "maintainAspectRatio": false, "plugins": {"legend": {"position": "top"}}, "scales": {"y": {"title": {"display": true, "text": "Forward %"}}}}};
+        const ctx = document.getElementById('fwdLoose');
+        if (ctx && window.Chart) new Chart(ctx, cfg);
+      })();
+    </script>
+    
+<div class="callout"><strong>Broader cut (n=21)</strong>
+        Medians: 10d +0.6%,
+        1m +1.9%
+        (78.9% up),
+        3m +3.6%,
+        6m +6.3%,
+        1y +17.2%.
+        Path of least resistance historically was still higher over 6–12 months,
+        with occasional soft 3m patches (p25 of 3m =
+        -4.8%).
+        </div>
+<h2>Horizon detail — primary (2% / pct50&amp;lt;50 / NHL&amp;lt;0)</h2><div class='panel'><table>
+<tr><th>Horizon</th><th class='num'>n</th><th class='num'>Median</th><th class='num'>Mean</th><th class='num'>p25</th><th class='num'>p75</th><th class='num'>% up</th><th class='num'>% ≤−5%</th><th class='num'>Med max DD</th><th class='num'>Baseline med</th></tr>
+<tr><td>10d</td><td class='num'>17</td><td class='num'>+1.2%</td><td class='num'>+0.4%</td><td class='num'>-2.1%</td><td class='num'>+2.7%</td><td class='num'>64.7%</td><td class='num'>5.9%</td><td class='num'>-1.2%</td><td class='num'>+0.7%</td></tr>
+<tr><td>1m</td><td class='num'>15</td><td class='num'>+1.6%</td><td class='num'>+0.8%</td><td class='num'>-0.1%</td><td class='num'>+2.6%</td><td class='num'>60.0%</td><td class='num'>0.0%</td><td class='num'>-1.5%</td><td class='num'>+1.3%</td></tr>
+<tr><td>3m</td><td class='num'>15</td><td class='num'>+3.5%</td><td class='num'>+1.0%</td><td class='num'>-1.5%</td><td class='num'>+4.7%</td><td class='num'>66.7%</td><td class='num'>20.0%</td><td class='num'>-2.1%</td><td class='num'>+3.3%</td></tr>
+<tr><td>6m</td><td class='num'>12</td><td class='num'>+3.9%</td><td class='num'>+3.6%</td><td class='num'>+0.8%</td><td class='num'>+6.0%</td><td class='num'>83.3%</td><td class='num'>0.0%</td><td class='num'>-4.5%</td><td class='num'>+5.7%</td></tr>
+<tr><td>1y</td><td class='num'>9</td><td class='num'>+1.2%</td><td class='num'>+3.7%</td><td class='num'>-4.6%</td><td class='num'>+14.7%</td><td class='num'>55.6%</td><td class='num'>22.2%</td><td class='num'>-4.5%</td><td class='num'>+11.7%</td></tr>
+</table></div>
+<h2>Horizon detail — broader (3% / pct50&amp;lt;40 / NHL&amp;lt;0)</h2><div class='panel'><table>
+<tr><th>Horizon</th><th class='num'>n</th><th class='num'>Median</th><th class='num'>Mean</th><th class='num'>p25</th><th class='num'>p75</th><th class='num'>% up</th><th class='num'>% ≤−5%</th><th class='num'>Med max DD</th><th class='num'>Baseline med</th></tr>
+<tr><td>10d</td><td class='num'>20</td><td class='num'>+0.6%</td><td class='num'>+0.4%</td><td class='num'>-1.4%</td><td class='num'>+2.1%</td><td class='num'>55.0%</td><td class='num'>0.0%</td><td class='num'>-1.1%</td><td class='num'>+0.7%</td></tr>
+<tr><td>1m</td><td class='num'>19</td><td class='num'>+1.9%</td><td class='num'>+1.7%</td><td class='num'>+0.6%</td><td class='num'>+3.3%</td><td class='num'>78.9%</td><td class='num'>5.3%</td><td class='num'>-1.9%</td><td class='num'>+1.3%</td></tr>
+<tr><td>3m</td><td class='num'>19</td><td class='num'>+3.6%</td><td class='num'>+0.7%</td><td class='num'>-4.8%</td><td class='num'>+6.3%</td><td class='num'>63.2%</td><td class='num'>26.3%</td><td class='num'>-5.3%</td><td class='num'>+3.3%</td></tr>
+<tr><td>6m</td><td class='num'>19</td><td class='num'>+6.3%</td><td class='num'>+6.6%</td><td class='num'>+4.6%</td><td class='num'>+10.1%</td><td class='num'>89.5%</td><td class='num'>5.3%</td><td class='num'>-5.6%</td><td class='num'>+5.7%</td></tr>
+<tr><td>1y</td><td class='num'>16</td><td class='num'>+17.2%</td><td class='num'>+13.9%</td><td class='num'>+9.0%</td><td class='num'>+19.8%</td><td class='num'>87.5%</td><td class='num'>6.2%</td><td class='num'>-5.6%</td><td class='num'>+11.7%</td></tr>
+</table></div>
+<h2>Horizon detail — extreme (2% / pct50&amp;lt;40 / NHL&amp;lt;0)</h2><div class='panel'><table>
+<tr><th>Horizon</th><th class='num'>n</th><th class='num'>Median</th><th class='num'>Mean</th><th class='num'>p25</th><th class='num'>p75</th><th class='num'>% up</th><th class='num'>% ≤−5%</th><th class='num'>Med max DD</th><th class='num'>Baseline med</th></tr>
+<tr><td>10d</td><td class='num'>2</td><td class='num'>-0.5%</td><td class='num'>-0.5%</td><td class='num'>-1.3%</td><td class='num'>+0.3%</td><td class='num'>50.0%</td><td class='num'>0.0%</td><td class='num'>-1.4%</td><td class='num'>+0.7%</td></tr>
+<tr><td>1m</td><td class='num'>1</td><td class='num'>+1.7%</td><td class='num'>+1.7%</td><td class='num'>+1.7%</td><td class='num'>+1.7%</td><td class='num'>100.0%</td><td class='num'>0.0%</td><td class='num'>-1.4%</td><td class='num'>+1.3%</td></tr>
+<tr><td>3m</td><td class='num'>1</td><td class='num'>-5.7%</td><td class='num'>-5.7%</td><td class='num'>-5.7%</td><td class='num'>-5.7%</td><td class='num'>0.0%</td><td class='num'>100.0%</td><td class='num'>-1.4%</td><td class='num'>+3.3%</td></tr>
+<tr><td>6m</td><td class='num'>1</td><td class='num'>+4.3%</td><td class='num'>+4.3%</td><td class='num'>+4.3%</td><td class='num'>+4.3%</td><td class='num'>100.0%</td><td class='num'>0.0%</td><td class='num'>-1.4%</td><td class='num'>+5.7%</td></tr>
+<tr><td>1y</td><td class='num'>1</td><td class='num'>+14.7%</td><td class='num'>+14.7%</td><td class='num'>+14.7%</td><td class='num'>+14.7%</td><td class='num'>100.0%</td><td class='num'>0.0%</td><td class='num'>-1.4%</td><td class='num'>+11.7%</td></tr>
+</table></div>
+<h2>Sensitivity grid</h2><div class='panel'><table>
+<tr><th>Near high</th><th class='num'>pct50 max</th><th class='num'>Signal days</th><th class='num'>Episodes</th><th class='num'>1m med</th><th class='num'>1m %up</th><th class='num'>3m med</th><th class='num'>3m %up</th></tr>
+<tr><td>1.0%</td><td class='num'>60</td><td class='num'>18</td><td class='num'>13</td><td class='num'>+1.1%</td><td class='num'>54.5%</td><td class='num'>+2.5%</td><td class='num'>63.6%</td></tr>
+<tr><td>1.0%</td><td class='num'>50</td><td class='num'>8</td><td class='num'>7</td><td class='num'>-0.0%</td><td class='num'>20.0%</td><td class='num'>+2.5%</td><td class='num'>80.0%</td></tr>
+<tr><td>1.0%</td><td class='num'>40</td><td class='num'>3</td><td class='num'>2</td><td class='num'>—</td><td class='num'>None%</td><td class='num'>—</td><td class='num'>None%</td></tr>
+<tr><td>1.0%</td><td class='num'>35</td><td class='num'>3</td><td class='num'>2</td><td class='num'>—</td><td class='num'>None%</td><td class='num'>—</td><td class='num'>None%</td></tr>
+<tr><td>1.0%</td><td class='num'>30</td><td class='num'>1</td><td class='num'>1</td><td class='num'>—</td><td class='num'>None%</td><td class='num'>—</td><td class='num'>None%</td></tr>
+<tr><td>2.0%</td><td class='num'>60</td><td class='num'>56</td><td class='num'>32</td><td class='num'>+1.6%</td><td class='num'>67.9%</td><td class='num'>+3.3%</td><td class='num'>64.3%</td></tr>
+<tr><td>2.0%</td><td class='num'>50</td><td class='num'>31</td><td class='num'>18</td><td class='num'>+1.6%</td><td class='num'>60.0%</td><td class='num'>+3.5%</td><td class='num'>66.7%</td></tr>
+<tr><td>2.0%</td><td class='num'>40</td><td class='num'>10</td><td class='num'>3</td><td class='num'>+1.7%</td><td class='num'>100.0%</td><td class='num'>-5.7%</td><td class='num'>0.0%</td></tr>
+<tr><td>2.0%</td><td class='num'>35</td><td class='num'>9</td><td class='num'>2</td><td class='num'>+1.7%</td><td class='num'>100.0%</td><td class='num'>-5.7%</td><td class='num'>0.0%</td></tr>
+<tr><td>2.0%</td><td class='num'>30</td><td class='num'>7</td><td class='num'>3</td><td class='num'>+1.7%</td><td class='num'>100.0%</td><td class='num'>-5.7%</td><td class='num'>0.0%</td></tr>
+<tr><td>2.0%</td><td class='num'>25</td><td class='num'>2</td><td class='num'>1</td><td class='num'>—</td><td class='num'>None%</td><td class='num'>—</td><td class='num'>None%</td></tr>
+<tr><td>3.0%</td><td class='num'>60</td><td class='num'>100</td><td class='num'>61</td><td class='num'>+1.5%</td><td class='num'>63.8%</td><td class='num'>+3.0%</td><td class='num'>62.1%</td></tr>
+<tr><td>3.0%</td><td class='num'>50</td><td class='num'>67</td><td class='num'>42</td><td class='num'>+1.4%</td><td class='num'>61.5%</td><td class='num'>+3.5%</td><td class='num'>59.0%</td></tr>
+<tr><td>3.0%</td><td class='num'>40</td><td class='num'>33</td><td class='num'>21</td><td class='num'>+1.9%</td><td class='num'>78.9%</td><td class='num'>+3.6%</td><td class='num'>63.2%</td></tr>
+<tr><td>3.0%</td><td class='num'>35</td><td class='num'>18</td><td class='num'>10</td><td class='num'>+2.7%</td><td class='num'>100.0%</td><td class='num'>-4.7%</td><td class='num'>37.5%</td></tr>
+<tr><td>3.0%</td><td class='num'>30</td><td class='num'>11</td><td class='num'>6</td><td class='num'>+2.0%</td><td class='num'>100.0%</td><td class='num'>-6.7%</td><td class='num'>0.0%</td></tr>
+<tr><td>3.0%</td><td class='num'>25</td><td class='num'>2</td><td class='num'>1</td><td class='num'>—</td><td class='num'>None%</td><td class='num'>—</td><td class='num'>None%</td></tr>
+</table></div>
+<h2>Primary episodes</h2><div class='panel'><table>
+<tr><th>Date</th><th class='num'>pct50</th><th class='num'>NHL</th><th class='num'>vs high</th><th class='num'>Days</th><th class='num'>10d</th><th class='num'>1m</th><th class='num'>3m</th><th class='num'>6m</th><th class='num'>1y</th></tr>
+<tr class=''><td>1999-03-30</td><td class='num'>46.2</td><td class='num'>-1</td><td class='num'>-1.2%</td><td class='num'>1</td><td class='num'>+2.1%</td><td class='num'>+3.2%</td><td class='num'>+3.9%</td><td class='num'>-1.4%</td><td class='num'>+15.9%</td></tr>
+<tr class=''><td>1999-12-09</td><td class='num'>44.8</td><td class='num'>-14</td><td class='num'>-1.8%</td><td class='num'>3</td><td class='num'>+3.6%</td><td class='num'>+3.5%</td><td class='num'>-0.9%</td><td class='num'>+3.5%</td><td class='num'>-4.6%</td></tr>
+<tr class=''><td>1999-12-15</td><td class='num'>43.2</td><td class='num'>-4</td><td class='num'>-1.4%</td><td class='num'>4</td><td class='num'>+3.6%</td><td class='num'>+3.7%</td><td class='num'>+3.2%</td><td class='num'>+4.6%</td><td class='num'>-3.8%</td></tr>
+<tr class=''><td>2000-01-03</td><td class='num'>48.1</td><td class='num'>-9</td><td class='num'>-0.9%</td><td class='num'>1</td><td class='num'>-0.0%</td><td class='num'>-3.2%</td><td class='num'>+3.5%</td><td class='num'>+1.0%</td><td class='num'>-11.8%</td></tr>
+<tr class=''><td>2000-02-08</td><td class='num'>45.5</td><td class='num'>-6</td><td class='num'>-1.9%</td><td class='num'>1</td><td class='num'>-5.6%</td><td class='num'>-2.8%</td><td class='num'>-2.0%</td><td class='num'>+2.9%</td><td class='num'>-7.0%</td></tr>
+<tr class=''><td>2017-08-11</td><td class='num'>46.3</td><td class='num'>-7</td><td class='num'>-1.6%</td><td class='num'>1</td><td class='num'>+0.1%</td><td class='num'>+2.3%</td><td class='num'>+5.9%</td><td class='num'>+8.8%</td><td class='num'>+15.6%</td></tr>
+<tr class=''><td>2018-10-08</td><td class='num'>49.1</td><td class='num'>-4</td><td class='num'>-1.6%</td><td class='num'>2</td><td class='num'>-4.5%</td><td class='num'>-4.5%</td><td class='num'>-10.4%</td><td class='num'>+0.1%</td><td class='num'>+1.2%</td></tr>
+<tr class='hl'><td>2024-12-17</td><td class='num'>41.9</td><td class='num'>-10</td><td class='num'>-0.7%</td><td class='num'>1</td><td class='num'>-3.0%</td><td class='num'>-0.0%</td><td class='num'>-6.3%</td><td class='num'>-0.4%</td><td class='num'>+13.0%</td></tr>
+<tr class='bad'><td>2024-12-27</td><td class='num'>29.2</td><td class='num'>-5</td><td class='num'>-2.0%</td><td class='num'>1</td><td class='num'>-2.1%</td><td class='num'>+1.7%</td><td class='num'>-5.7%</td><td class='num'>+4.3%</td><td class='num'>+14.7%</td></tr>
+<tr class='hl'><td>2025-10-13</td><td class='num'>44.7</td><td class='num'>-1</td><td class='num'>-1.5%</td><td class='num'>1</td><td class='num'>+3.3%</td><td class='num'>+2.9%</td><td class='num'>+4.6%</td><td class='num'>+5.5%</td><td class='num'>—</td></tr>
+<tr class='hl'><td>2025-10-16</td><td class='num'>42.0</td><td class='num'>-6</td><td class='num'>-1.9%</td><td class='num'>1</td><td class='num'>+2.9%</td><td class='num'>+1.6%</td><td class='num'>+4.7%</td><td class='num'>+7.2%</td><td class='num'>—</td></tr>
+<tr class='hl'><td>2025-11-03</td><td class='num'>40.4</td><td class='num'>-7</td><td class='num'>-0.6%</td><td class='num'>1</td><td class='num'>-2.6%</td><td class='num'>-0.0%</td><td class='num'>+0.5%</td><td class='num'>+7.5%</td><td class='num'>—</td></tr>
+<tr class='hl'><td>2026-05-13</td><td class='num'>46.6</td><td class='num'>-8</td><td class='num'>0.0%</td><td class='num'>1</td><td class='num'>+1.6%</td><td class='num'>-0.2%</td><td class='num'>+4.8%</td><td class='num'>—</td><td class='num'>—</td></tr>
+<tr class='hl'><td>2026-05-15</td><td class='num'>45.4</td><td class='num'>-20</td><td class='num'>-1.2%</td><td class='num'>1</td><td class='num'>+2.6%</td><td class='num'>+1.4%</td><td class='num'>+4.5%</td><td class='num'>—</td><td class='num'>—</td></tr>
+<tr class='hl'><td>2026-05-19</td><td class='num'>48.0</td><td class='num'>-2</td><td class='num'>-2.0%</td><td class='num'>1</td><td class='num'>+2.7%</td><td class='num'>+2.0%</td><td class='num'>+4.8%</td><td class='num'>—</td><td class='num'>—</td></tr>
+<tr class='hl'><td>2026-09-08</td><td class='num'>43.2</td><td class='num'>-7</td><td class='num'>-1.6%</td><td class='num'>1</td><td class='num'>+1.2%</td><td class='num'>—</td><td class='num'>—</td><td class='num'>—</td><td class='num'>—</td></tr>
+<tr class='bad'><td>2026-09-11</td><td class='num'>39.4</td><td class='num'>-1</td><td class='num'>-1.8%</td><td class='num'>1</td><td class='num'>+1.1%</td><td class='num'>—</td><td class='num'>—</td><td class='num'>—</td><td class='num'>—</td></tr>
+<tr class='bad'><td>2026-09-18</td><td class='num'>28.8</td><td class='num'>-20</td><td class='num'>-1.9%</td><td class='num'>8</td><td class='num'>—</td><td class='num'>—</td><td class='num'>—</td><td class='num'>—</td><td class='num'>—</td></tr>
+</table></div>
+<div class="callout warn"><strong>How to read this for today</strong>
+        Breadth is genuinely poor relative to the index level — that part of the research is right.
+        Historically, similar (milder) setups did <em>not</em> reliably precede index crashes;
+        medians stayed positive out to 1y, with some soft 3m patches.
+        Today's tape (pct50 ≈ 24%, NHL -19) is more extreme
+        than almost all prior cases, so history is a thin guide. Survivorship bias applies
+        (current SPX members only).
+        </div>
+<p class='muted'>SPX within 2% of 252d high; &lt; 50% (primary); &lt; 40% (extreme/today-like); new 252d highs − new 252d lows &lt; 0. Universe: Current S&amp;P 500 constituents (Yahoo closes; survivorship bias). As of 2026-09-29.</p>
+    <p class="footer">Generated by <code>build_analysis_reports.py</code>. Cursor canvases are IDE-only; use these HTML pages for browsing.</p>
+  </div>
+</body>
+</html>

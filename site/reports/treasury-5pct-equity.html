@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>10Y Treasury ≥5% vs Stock Indices</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+:root {
+  --bg: #f4f5f2;
+  --panel: #fff;
+  --ink: #1a1d18;
+  --muted: #5c6358;
+  --line: #d8ddd4;
+  --accent: #2f5d50;
+  --accent-soft: #e7f0ec;
+  --danger: #8b3a3a;
+  --ok: #2f5d50;
+  --warn: #8a5a18;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --sans: "Source Sans 3", "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--ink);
+  background:
+    radial-gradient(1000px 420px at 8% -8%, #e8efe9 0%, transparent 55%),
+    var(--bg);
+  line-height: 1.45;
+}
+.wrap { max-width: 1040px; margin: 0 auto; padding: 28px 22px 64px; }
+.topnav { display: flex; gap: 14px; align-items: center; margin-bottom: 18px; font-size: 13px; }
+.topnav a { color: var(--accent); font-weight: 650; text-decoration: none; }
+.topnav a:hover { text-decoration: underline; }
+.brand { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+h1 { font-size: 26px; margin: 4px 0 8px; line-height: 1.2; }
+.sub { color: var(--muted); font-size: 14px; margin: 0 0 20px; max-width: 70ch; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0 20px; }
+@media (max-width: 720px) { .stats { grid-template-columns: 1fr 1fr; } }
+.stat {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
+}
+.stat .v { font-size: 22px; font-weight: 700; color: var(--accent); }
+.stat .v.warn { color: var(--warn); }
+.stat .v.danger { color: var(--danger); }
+.stat .l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; font-weight: 700; }
+.callout {
+  background: var(--accent-soft); border: 1px solid #cfe0d7; border-radius: 10px;
+  padding: 12px 14px; margin: 14px 0 20px; font-size: 14px;
+}
+.callout.warn { background: #f7f0e4; border-color: #e5d3b0; }
+.callout strong { display: block; margin-bottom: 4px; }
+h2 { font-size: 17px; margin: 28px 0 8px; }
+h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 18px 0 6px; }
+.panel {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px 16px; margin: 10px 0 16px;
+}
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 8px 8px; border-top: 1px solid #eef1ea; text-align: left; vertical-align: top; }
+th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 700; border-top: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr.hl td { background: #eef6f2; }
+tr.bad td { background: #f8eeee; }
+.bars { display: grid; gap: 8px; margin: 8px 0 4px; }
+.bar-row { display: grid; grid-template-columns: 56px 1fr 64px; gap: 10px; align-items: center; font-size: 13px; }
+.bar-track { height: 10px; background: #e8ece4; border-radius: 999px; overflow: hidden; position: relative; }
+.bar-fill { height: 100%; background: var(--accent); border-radius: 999px; }
+.bar-fill.neg { background: var(--danger); }
+.chart-wrap { position: relative; height: 280px; margin: 8px 0 4px; }
+.muted { color: var(--muted); font-size: 12px; }
+code { font-family: var(--mono); font-size: 11px; background: #efece6; padding: 1px 5px; border-radius: 4px; }
+.footer { margin-top: 36px; font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topnav">
+      <a href="../analysis_library.html">← Analysis library</a>
+      <span class="muted">HTML report (opens in browser)</span>
+    </div>
+    <div class="brand">Research desk</div>
+    <h1>10Y Treasury ≥5% vs Stock Indices</h1>
+    <p class="sub">FRED DGS10 ≥5% episode starts · SPX / NDX / RUT forward · as of 2026-09-24</p>
+    <div class="stats"><div class="stat"><div class="v warn">5.11%</div><div class="l">10Y today</div></div><div class="stat"><div class="v">6</div><div class="l">≥5% episodes</div></div><div class="stat"><div class="v danger">-3.6%</div><div class="l">SPX med @ 3m (post-00)</div></div><div class="stat"><div class="v danger">-11.2%</div><div class="l">NDX med @ 3m (post-00)</div></div></div>
+<div class="callout"><strong>Current setup</strong>
+        As of 2026-09-24: DGS10 = <strong>5.11%</strong>
+        (above 5%).
+        Episode started 2026-09-15
+        (this contiguous stretch since 2026-09-23).
+        Post-2020 yield high = 5.11% —
+        today is a 252d yield high.
+        First time 10Y has sustained ≥5% since the 2007 episode.
+        </div>
+<div class="callout warn"><strong>How rare is ≥5%?</strong>
+        Since equity data starts (1987): 23 raw stretches above 5%,
+        merged into <strong>6 episodes</strong>
+        (gap ≤21 sessions below still counts as one episode).
+        Days above 5%: 36.5% of the sample — almost all of that was pre-2000
+        when ≥5% was normal. Modern breaks (2001, 2006, 2007, now) are the relevant comps.
+        </div>
+<h2>After 10Y first crosses ≥5% — post-2000 episodes</h2>
+<p class='muted'>n=4 episode starts in 2000+. Unconditional 3m median for comparison: SPX +3.1%, NDX +4.6%.</p>
+
+    <div class="panel"><div class="chart-wrap"><canvas id="epPost"></canvas></div></div>
+    <script>
+      (() => {
+        const cfg = {"type": "bar", "data": {"labels": ["1w", "1m", "3m", "6m"], "datasets": [{"label": "SPX median %", "data": [1.66, 0.42, -3.56, -0.38], "backgroundColor": "#2f5d50"}, {"label": "NDX median %", "data": [1.71, -0.01, -11.17, 0.38], "backgroundColor": "#4a7ab5"}, {"label": "RUT median %", "data": [0.97, 3.38, -3.93, 0.8], "backgroundColor": "#8a5a18"}]}, "options": {"responsive": true, "maintainAspectRatio": false, "plugins": {"legend": {"position": "top"}}, "scales": {"y": {"title": {"display": true, "text": "Forward return from episode start (%)"}}}}};
+        const ctx = document.getElementById('epPost');
+        if (ctx && window.Chart) new Chart(ctx, cfg);
+      })();
+    </script>
+    
+
+    <div class="panel"><div class="chart-wrap"><canvas id="epUp"></canvas></div></div>
+    <script>
+      (() => {
+        const cfg = {"type": "bar", "data": {"labels": ["1w", "1m", "3m", "6m"], "datasets": [{"label": "% SPX up", "data": [75.0, 66.7, 0.0, 33.3], "backgroundColor": "#6a9a8c"}, {"label": "% NDX up", "data": [75.0, 33.3, 33.3, 66.7], "backgroundColor": "#4a7ab5"}]}, "options": {"responsive": true, "maintainAspectRatio": false, "plugins": {"legend": {"position": "top"}}, "scales": {"y": {"min": 0, "max": 100, "title": {"display": true, "text": "% up"}}}}};
+        const ctx = document.getElementById('epUp');
+        if (ctx && window.Chart) new Chart(ctx, cfg);
+      })();
+    </script>
+    
+<div class="callout warn"><strong>Base rate (post-2000 episode starts)</strong>
+        Next month is mixed (SPX med +0.4%,
+        NDX -0.0%).
+        By <strong>3 months</strong> equities were usually softer than normal:
+        SPX med -3.6%
+        (baseline +3.1%),
+        NDX med -11.2%
+        (baseline +4.6%).
+        Nasdaq was the weaker link. By 6m the drag often faded
+        (SPX med -0.4%).
+        Sample is tiny — treat as case history.
+        </div>
+<h2>When 10Y prints a new 252d high while already ≥5%</h2>
+<p class='muted'>Matches “yield hit a new high today.” Post-2000 n=15 (deduped consecutive high days).</p>
+
+    <div class="panel"><div class="chart-wrap"><canvas id="hiPost"></canvas></div></div>
+    <script>
+      (() => {
+        const cfg = {"type": "bar", "data": {"labels": ["1w", "1m", "3m", "6m"], "datasets": [{"label": "SPX median %", "data": [1.49, -1.52, -1.67, 5.44], "backgroundColor": "#2f5d50"}, {"label": "NDX median %", "data": [0.51, -3.08, -6.41, 5.89], "backgroundColor": "#4a7ab5"}, {"label": "RUT median %", "data": [2.34, 1.07, -7.88, 2.04], "backgroundColor": "#8a5a18"}]}, "options": {"responsive": true, "maintainAspectRatio": false, "plugins": {"legend": {"position": "top"}}, "scales": {"y": {"title": {"display": true, "text": "Forward %"}}}}};
+        const ctx = document.getElementById('hiPost');
+        if (ctx && window.Chart) new Chart(ctx, cfg);
+      })();
+    </script>
+    
+<div class="callout"><strong>New-high-while-≥5% (post-2000)</strong>
+        Next 1m: SPX med -1.5%,
+        NDX -3.1%.
+        Next 3m: SPX -1.7%,
+        NDX -6.4%.
+        Soft patch is common near yield highs; not an automatic crash signal.
+        </div>
+<h2>Horizon detail — post-2000 episode starts</h2><div class='panel'><table>
+<tr><th>Horizon</th><th class='num'>SPX med</th><th class='num'>% up</th><th class='num'>MaxDD med</th><th class='num'>NDX med</th><th class='num'>% up</th><th class='num'>MaxDD med</th><th class='num'>RUT med</th><th class='num'>% up</th></tr>
+<tr><td>1w</td><td class='num'>+1.7%</td><td class='num'>75.0%</td><td class='num'>-0.4%</td><td class='num'>+1.7%</td><td class='num'>75.0%</td><td class='num'>-0.5%</td><td class='num'>+1.0%</td><td class='num'>75.0%</td></tr>
+<tr><td>1m</td><td class='num'>+0.4%</td><td class='num'>66.7%</td><td class='num'>-0.4%</td><td class='num'>-0.0%</td><td class='num'>33.3%</td><td class='num'>-0.7%</td><td class='num'>+3.4%</td><td class='num'>66.7%</td></tr>
+<tr><td>3m</td><td class='num'>-3.6%</td><td class='num'>0.0%</td><td class='num'>-5.4%</td><td class='num'>-11.2%</td><td class='num'>33.3%</td><td class='num'>-8.2%</td><td class='num'>-3.9%</td><td class='num'>33.3%</td></tr>
+<tr><td>6m</td><td class='num'>-0.4%</td><td class='num'>33.3%</td><td class='num'>-5.4%</td><td class='num'>+0.4%</td><td class='num'>66.7%</td><td class='num'>-8.6%</td><td class='num'>+0.8%</td><td class='num'>66.7%</td></tr>
+</table></div>
+<h2>Horizon detail — all episode starts</h2><div class='panel'><table>
+<tr><th>Horizon</th><th class='num'>SPX med</th><th class='num'>% up</th><th class='num'>MaxDD med</th><th class='num'>NDX med</th><th class='num'>% up</th><th class='num'>MaxDD med</th><th class='num'>RUT med</th><th class='num'>% up</th></tr>
+<tr><td>1w</td><td class='num'>+1.7%</td><td class='num'>66.7%</td><td class='num'>-0.5%</td><td class='num'>+1.5%</td><td class='num'>66.7%</td><td class='num'>-1.2%</td><td class='num'>+0.2%</td><td class='num'>50.0%</td></tr>
+<tr><td>1m</td><td class='num'>+0.4%</td><td class='num'>60.0%</td><td class='num'>-0.5%</td><td class='num'>-0.0%</td><td class='num'>40.0%</td><td class='num'>-2.4%</td><td class='num'>+0.2%</td><td class='num'>60.0%</td></tr>
+<tr><td>3m</td><td class='num'>-3.6%</td><td class='num'>20.0%</td><td class='num'>-5.4%</td><td class='num'>-11.2%</td><td class='num'>40.0%</td><td class='num'>-9.1%</td><td class='num'>-3.9%</td><td class='num'>40.0%</td></tr>
+<tr><td>6m</td><td class='num'>-0.4%</td><td class='num'>40.0%</td><td class='num'>-5.4%</td><td class='num'>+0.4%</td><td class='num'>60.0%</td><td class='num'>-9.4%</td><td class='num'>+0.8%</td><td class='num'>60.0%</td></tr>
+</table></div>
+<h2>Horizon detail — new 252d yield high (≥5%, post-2000)</h2><div class='panel'><table>
+<tr><th>Horizon</th><th class='num'>SPX med</th><th class='num'>% up</th><th class='num'>MaxDD med</th><th class='num'>NDX med</th><th class='num'>% up</th><th class='num'>MaxDD med</th><th class='num'>RUT med</th><th class='num'>% up</th></tr>
+<tr><td>1w</td><td class='num'>+1.5%</td><td class='num'>76.9%</td><td class='num'>-0.0%</td><td class='num'>+0.5%</td><td class='num'>61.5%</td><td class='num'>-0.9%</td><td class='num'>+2.3%</td><td class='num'>76.9%</td></tr>
+<tr><td>1m</td><td class='num'>-1.5%</td><td class='num'>41.7%</td><td class='num'>-3.0%</td><td class='num'>-3.1%</td><td class='num'>41.7%</td><td class='num'>-5.6%</td><td class='num'>+1.1%</td><td class='num'>58.3%</td></tr>
+<tr><td>3m</td><td class='num'>-1.7%</td><td class='num'>33.3%</td><td class='num'>-5.2%</td><td class='num'>-6.4%</td><td class='num'>41.7%</td><td class='num'>-6.6%</td><td class='num'>-7.9%</td><td class='num'>33.3%</td></tr>
+<tr><td>6m</td><td class='num'>+5.4%</td><td class='num'>100.0%</td><td class='num'>-5.2%</td><td class='num'>+5.9%</td><td class='num'>100.0%</td><td class='num'>-13.8%</td><td class='num'>+2.0%</td><td class='num'>75.0%</td></tr>
+</table></div>
+<h2>Every ≥5% episode</h2><div class='panel'><table>
+<tr><th>Start</th><th>End</th><th class='num'>Peak Yld</th><th class='num'>SPX 1m</th><th class='num'>NDX 1m</th><th class='num'>SPX 3m</th><th class='num'>NDX 3m</th><th class='num'>SPX 6m</th><th class='num'>NDX 6m</th></tr>
+<tr class=''><td>1987-09-10</td><td>1998-09-08</td><td class='num'>10.23</td><td class='num'>-1.9%</td><td class='num'>-1.3%</td><td class='num'>-24.7%</td><td class='num'>-31.9%</td><td class='num'>-16.8%</td><td class='num'>-13.0%</td></tr>
+<tr class=''><td>1999-02-12</td><td>2001-08-15</td><td class='num'>6.79</td><td class='num'>+6.2%</td><td class='num'>+5.9%</td><td class='num'>+8.8%</td><td class='num'>+8.5%</td><td class='num'>+7.9%</td><td class='num'>+17.8%</td></tr>
+<tr class=''><td>2001-11-23</td><td>2002-06-11</td><td class='num'>5.44</td><td class='num'>-0.5%</td><td class='num'>-0.0%</td><td class='num'>-3.6%</td><td class='num'>-11.2%</td><td class='num'>-6.6%</td><td class='num'>-21.1%</td></tr>
+<tr class='hl'><td>2006-04-13</td><td>2006-08-14</td><td class='num'>5.25</td><td class='num'>+0.4%</td><td class='num'>-4.5%</td><td class='num'>-4.1%</td><td class='num'>-14.6%</td><td class='num'>+5.7%</td><td class='num'>+0.4%</td></tr>
+<tr class='hl'><td>2007-06-07</td><td>2007-07-19</td><td class='num'>5.26</td><td class='num'>+2.8%</td><td class='num'>+5.7%</td><td class='num'>-0.8%</td><td class='num'>+6.2%</td><td class='num'>-0.4%</td><td class='num'>+11.5%</td></tr>
+<tr class='hl'><td>2026-09-15</td><td>2026-09-24</td><td class='num'>5.11</td><td class='num'>—</td><td class='num'>—</td><td class='num'>—</td><td class='num'>—</td><td class='num'>—</td><td class='num'>—</td></tr>
+</table></div>
+<div class="callout warn"><strong>How to read this for today</strong>
+        10Y at 5.11% is a post-2020 high and the first ≥5% episode since 2007.
+        History after modern ≥5% breaks is sparse but leans toward a soft 1–3 month window
+        for equities (Nasdaq more than SPX), not an immediate crash template.
+        2007’s cross was followed by a still-okay 1–3m before the later credit crisis —
+        the 5% print alone was not the crash clock. n is very small.
+        </div>
+<p class='muted'>start of ≥5% episode (regimes merged if gap below 5% ≤ 21 sessions). Pre-2000, 10Y ≥5% was normal. Post-2000 episodes are rare and more relevant to today&#x27;s break of 5%. Today&#x27;s print is also a post-2020 yield high. As of 2026-09-24.</p>
+    <p class="footer">Generated by <code>build_analysis_reports.py</code>. Cursor canvases are IDE-only; use these HTML pages for browsing.</p>
+  </div>
+</body>
+</html>

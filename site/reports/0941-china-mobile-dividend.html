@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>0941.HK · China Mobile — Dividend Research</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+:root {
+  --bg: #f4f5f2;
+  --panel: #fff;
+  --ink: #1a1d18;
+  --muted: #5c6358;
+  --line: #d8ddd4;
+  --accent: #2f5d50;
+  --accent-soft: #e7f0ec;
+  --danger: #8b3a3a;
+  --ok: #2f5d50;
+  --warn: #8a5a18;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --sans: "Source Sans 3", "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--ink);
+  background:
+    radial-gradient(1000px 420px at 8% -8%, #e8efe9 0%, transparent 55%),
+    var(--bg);
+  line-height: 1.45;
+}
+.wrap { max-width: 1040px; margin: 0 auto; padding: 28px 22px 64px; }
+.topnav { display: flex; gap: 14px; align-items: center; margin-bottom: 18px; font-size: 13px; }
+.topnav a { color: var(--accent); font-weight: 650; text-decoration: none; }
+.topnav a:hover { text-decoration: underline; }
+.brand { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+h1 { font-size: 26px; margin: 4px 0 8px; line-height: 1.2; }
+.sub { color: var(--muted); font-size: 14px; margin: 0 0 20px; max-width: 70ch; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0 20px; }
+@media (max-width: 720px) { .stats { grid-template-columns: 1fr 1fr; } }
+.stat {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
+}
+.stat .v { font-size: 22px; font-weight: 700; color: var(--accent); }
+.stat .v.warn { color: var(--warn); }
+.stat .v.danger { color: var(--danger); }
+.stat .l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; font-weight: 700; }
+.callout {
+  background: var(--accent-soft); border: 1px solid #cfe0d7; border-radius: 10px;
+  padding: 12px 14px; margin: 14px 0 20px; font-size: 14px;
+}
+.callout.warn { background: #f7f0e4; border-color: #e5d3b0; }
+.callout strong { display: block; margin-bottom: 4px; }
+h2 { font-size: 17px; margin: 28px 0 8px; }
+h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 18px 0 6px; }
+.panel {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px 16px; margin: 10px 0 16px;
+}
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 8px 8px; border-top: 1px solid #eef1ea; text-align: left; vertical-align: top; }
+th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 700; border-top: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr.hl td { background: #eef6f2; }
+tr.bad td { background: #f8eeee; }
+.bars { display: grid; gap: 8px; margin: 8px 0 4px; }
+.bar-row { display: grid; grid-template-columns: 56px 1fr 64px; gap: 10px; align-items: center; font-size: 13px; }
+.bar-track { height: 10px; background: #e8ece4; border-radius: 999px; overflow: hidden; position: relative; }
+.bar-fill { height: 100%; background: var(--accent); border-radius: 999px; }
+.bar-fill.neg { background: var(--danger); }
+.chart-wrap { position: relative; height: 280px; margin: 8px 0 4px; }
+.muted { color: var(--muted); font-size: 12px; }
+code { font-family: var(--mono); font-size: 11px; background: #efece6; padding: 1px 5px; border-radius: 4px; }
+.footer { margin-top: 36px; font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topnav">
+      <a href="../analysis_library.html">← Analysis library</a>
+      <span class="muted">HTML report (opens in browser)</span>
+    </div>
+    <div class="brand">Research desk</div>
+    <h1>0941.HK · China Mobile — Dividend Research</h1>
+    <p class="sub">0941.HK · high-yield HK dividend equity research · price HK$78.80 · as of ~2 Oct 2026</p>
+    <div class="stats"><div class="stat"><div class="v">HK$78.80</div><div class="l">Price</div></div><div class="stat"><div class="v">6.7%</div><div class="l">FY25 DPS yield</div></div><div class="stat"><div class="v">6.9%</div><div class="l">Fwd indicated yield</div></div><div class="stat"><div class="v">75%</div><div class="l">Payout (FY25)</div></div></div>
+<div class="stats"><div class="stat"><div class="v">11.1x</div><div class="l">Trailing P/E</div></div><div class="stat"><div class="v">1.03x</div><div class="l">P/B</div></div><div class="stat"><div class="v">0.26</div><div class="l">Beta</div></div><div class="stat"><div class="v">HK$95.1</div><div class="l">Analyst target (15)</div></div></div>
+<div class="callout"><strong>Core take</strong>
+        China Mobile is a high-quality HK dividend compounder — ~6.7–6.9% yield,
+        75% payout with “stable-to-rising” FY26 guidance, net-cash balance sheet,
+        and low beta. Near-term earnings are soft (VAT + legacy telecom pressure),
+        so this is an income / defensive hold, not a growth story.
+        </div>
+<h2>Dividend thesis</h2>
+<div class="panel">
+        <p>Management has lifted the payout toward ~75% and guided FY26 payout
+        “stable-to-rising.” DPS has climbed from roughly HK$3.3–3.4 (2020–21) to
+        HK$5.27 in FY25.</p>
+        <p>1H26 interim was RMB2.51 / HK$2.9003 (+5.5% YoY in HKD), at ~74% interim
+        payout. Cash generation recovered sharply in 1H26 (FCF RMB53.9bn, +112% YoY),
+        which supports the dividend even while reported profit fell 6.3%.</p>
+        <p class="muted">From 2026 interim, dividends are declared in RMB (HKD holders
+        can elect HKD or RMB). FX can move the HKD cash amount.</p>
+        </div>
+<h3>Income math at HK$78.80</h3>
+<div class="panel"><table>
+        <thead><tr><th>Basis</th><th class="num">DPS (HK$)</th><th class="num">Yield</th></tr></thead>
+        <tbody>
+        <tr class="hl"><td>FY25 actual</td><td class="num">5.27</td><td class="num">6.69%</td></tr>
+        <tr class="hl"><td>Yahoo fwd rate</td><td class="num">5.42</td><td class="num">6.88%</td></tr>
+        <tr><td>If DPS +3%</td><td class="num">5.43</td><td class="num">6.89%</td></tr>
+        <tr><td>If DPS +6%</td><td class="num">5.59</td><td class="num">7.09%</td></tr>
+        <tr><td>5yr avg yield (Yahoo)</td><td class="num">—</td><td class="num">6.92%</td></tr>
+        </tbody></table></div>
+<h2>Annual DPS (ex-date calendar year)</h2>
+
+    <div class="panel"><div class="chart-wrap"><canvas id="cmDpsChart"></canvas></div></div>
+    <script>
+      (() => {
+        const cfg = {"type": "bar", "data": {"labels": ["2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026*"], "datasets": [{"label": "DPS (HK$)", "data": [2.92, 3.25, 3.39, 4.63, 4.64, 5.0, 5.24, 5.42], "backgroundColor": "#2f5d50"}]}, "options": {"responsive": true, "maintainAspectRatio": false, "plugins": {"legend": {"display": false}}, "scales": {"y": {"title": {"display": true, "text": "Dividend per share (HK$)"}}}}};
+        const ctx = document.getElementById('cmDpsChart');
+        if (ctx && window.Chart) new Chart(ctx, cfg);
+      })();
+    </script>
+    
+<p class='muted'>Source: Yahoo Finance dividends summed by calendar year of ex-date. 2026* = YTD (final HK$2.52 + interim HK$2.9003). Company FY25 DPS was HK$5.27.</p>
+<h2>Share price (month-end, 5y)</h2>
+
+    <div class="panel"><div class="chart-wrap"><canvas id="cmPxChart"></canvas></div></div>
+    <script>
+      (() => {
+        const cfg = {"type": "line", "data": {"labels": ["2021-12", "2022-06", "2022-12", "2023-06", "2023-12", "2024-06", "2024-12", "2025-06", "2025-12", "2026-06", "2026-10"], "datasets": [{"label": "Close (HK$)", "data": [32.9, 36.1, 39.8, 50.9, 53.5, 65.6, 67.5, 79.0, 76.5, 73.5, 78.8], "borderColor": "#2f5d50", "backgroundColor": "rgba(47,93,80,0.12)", "fill": true, "tension": 0.25, "pointRadius": 3}]}, "options": {"responsive": true, "maintainAspectRatio": false, "plugins": {"legend": {"display": false}}, "scales": {"y": {"title": {"display": true, "text": "Share price (HK$)"}}}}};
+        const ctx = document.getElementById('cmPxChart');
+        if (ctx && window.Chart) new Chart(ctx, cfg);
+      })();
+    </script>
+    
+<p class='muted'>Source: Yahoo Finance monthly closes (approx.). Stock has roughly doubled since late 2022; yield compressed from higher levels but remains ~7%.</p>
+<h2>Business &amp; earnings snapshot</h2>
+<div class="panel">
+        <h3>FY25 full year</h3>
+        <table>
+        <thead><tr><th>Metric</th><th class="num">FY25</th><th class="num">FY24</th><th class="num">YoY</th></tr></thead>
+        <tbody>
+        <tr><td>Operating revenue (RMB bn)</td><td class="num">1,050.2</td><td class="num">1,040.8</td><td class="num">+0.9%</td></tr>
+        <tr><td>Net profit (RMB bn)</td><td class="num">137.1</td><td class="num">138.4</td><td class="num">−0.9%</td></tr>
+        <tr><td>Basic EPS (RMB)</td><td class="num">6.35</td><td class="num">6.45</td><td class="num">−1.6%</td></tr>
+        <tr class="hl"><td>Full-year DPS (HK$)</td><td class="num">5.27</td><td class="num">5.09</td><td class="num">+3.5%</td></tr>
+        <tr class="hl"><td>Payout ratio</td><td class="num">75%</td><td class="num">~73%</td><td class="num">↑</td></tr>
+        </tbody></table>
+        <h3>1H26 interim</h3>
+        <table>
+        <thead><tr><th>Metric</th><th class="num">1H26</th><th class="num">YoY</th></tr></thead>
+        <tbody>
+        <tr><td>Operating revenue (RMB bn)</td><td class="num">538.0</td><td class="num">−1.1%</td></tr>
+        <tr class="bad"><td>Net profit (RMB bn)</td><td class="num">78.9</td><td class="num">−6.3%</td></tr>
+        <tr><td>EPS (RMB)</td><td class="num">3.64</td><td class="num">—</td></tr>
+        <tr class="hl"><td>Interim DPS</td><td class="num">HK$2.9003</td><td class="num">+5.5% HKD</td></tr>
+        <tr class="hl"><td>Operating cash (RMB bn)</td><td class="num">114.9</td><td class="num">+37%</td></tr>
+        <tr class="hl"><td>Free cash flow (RMB bn)</td><td class="num">53.9</td><td class="num">+112%</td></tr>
+        </tbody></table>
+        <p class="muted">Company says revenue and profit grew on a comparable basis excluding VAT scope changes.</p>
+        </div>
+<div class="panel">
+        <h3>Growth mix — legacy pressure, digital offset</h3>
+        <table>
+        <thead><tr><th>Scale</th><th>Pressure</th><th>Offset</th></tr></thead>
+        <tbody>
+        <tr>
+          <td>1,011m mobile · 687m 5G (~55% share) · 337m broadband</td>
+          <td>Communications rev −5.7% · ARPU RMB45.1 · VAT + industry transition</td>
+          <td>Computing +14% (RMB52.9bn) · Intelligent computing +130% · Computing+AI = 22.6% of principal rev</td>
+        </tr>
+        </tbody></table>
+        </div>
+<h2>Balance sheet &amp; coverage</h2>
+<div class="stats"><div class="stat"><div class="v">~RMB 309bn</div><div class="l">Cash &amp; ST investments</div></div><div class="stat"><div class="v">~RMB 101bn</div><div class="l">Total debt (net cash)</div></div><div class="stat"><div class="v">~7%</div><div class="l">Debt / equity</div></div><div class="stat"><div class="v">RMB 76bn</div><div class="l">FY25 FCF</div></div></div>
+<p class='muted'>Dividends paid ~RMB103bn in FY25 vs net income RMB137bn. Coverage is earnings- and FCF-supported rather than debt-funded. Watch FY25 FCF dip (capex timing / working capital); 1H26 FCF rebound is constructive.</p>
+<h2>HK peer yield screen</h2>
+<div class="panel"><table>
+        <thead><tr>
+          <th>Ticker</th><th>Name</th><th class="num">Price</th><th class="num">Yield %</th>
+          <th class="num">Payout %</th><th class="num">P/E</th><th class="num">P/B</th><th class="num">Beta</th>
+        </tr></thead>
+        <tbody>
+        <tr class="hl"><td>0941</td><td>China Mobile</td><td class="num">78.80</td><td class="num">6.82</td><td class="num">77</td><td class="num">11.1</td><td class="num">1.03</td><td class="num">0.26</td></tr>
+        <tr><td>0728</td><td>China Telecom</td><td class="num">4.44</td><td class="num">6.44</td><td class="num">85</td><td class="num">12.0</td><td class="num">0.74</td><td class="num">0.55</td></tr>
+        <tr><td>0762</td><td>China Unicom</td><td class="num">5.42</td><td class="num">8.52*</td><td class="num">80</td><td class="num">8.9</td><td class="num">0.38</td><td class="num">0.52</td></tr>
+        <tr><td>0008</td><td>PCCW</td><td class="num">5.10</td><td class="num">7.39</td><td class="num">n/m</td><td class="num">n/m</td><td class="num">n/m</td><td class="num">0.38</td></tr>
+        <tr><td>0003</td><td>HK &amp; China Gas</td><td class="num">7.02</td><td class="num">4.93</td><td class="num">103</td><td class="num">20.6</td><td class="num">2.18</td><td class="num">0.56</td></tr>
+        <tr><td>0002</td><td>CLP Holdings</td><td class="num">75.95</td><td class="num">4.17</td><td class="num">75</td><td class="num">17.7</td><td class="num">1.74</td><td class="num">0.56</td></tr>
+        <tr><td>0006</td><td>Power Assets</td><td class="num">59.30</td><td class="num">4.73</td><td class="num">34</td><td class="num">7.1</td><td class="num">1.23</td><td class="num">0.63</td></tr>
+        </tbody></table>
+        <p class="muted">Source: Yahoo Finance indicated dividendYield. *0762 forward yield looks
+        inconsistent with trailing (~2.4%); treat Unicom with caution until DPS is confirmed.
+        Among big-3 telcos, 0941 offers the best mix of yield, balance sheet, and liquidity.</p>
+        </div>
+<h2>Investment view</h2>
+<div class="panel">
+        <h3>What works</h3>
+        <ul>
+          <li>High, growing DPS with explicit payout guidance</li>
+          <li>Net-cash SOE telco; beta 0.26 — portfolio ballast</li>
+          <li>Cheap absolute valuation (P/E ~11x, P/B ~1x)</li>
+          <li>Digital/AI mix shift supports medium-term earnings quality</li>
+          <li>Deep liquidity; easy to size in a HK dividend sleeve</li>
+        </ul>
+        <h3>What to watch</h3>
+        <ul>
+          <li>Legacy ARPU / communications revenue still declining</li>
+          <li>VAT and policy noise can hit reported EPS</li>
+          <li>~75% payout leaves less cushion if profit falls further</li>
+          <li>RMB-declared dividends → HKD cash varies with FX</li>
+          <li>China regulatory / SOE governance overhang</li>
+        </ul>
+        </div>
+<div class="callout"><strong>Dividend-screener verdict</strong>
+        Keep 0941 on a HK high-yield shortlist. At ~6.7–6.9% with rising DPS and a
+        fortress balance sheet, it is a core income holding rather than a deep-value
+        special situation. Size for yield stability; do not underwrite double-digit
+        capital gains as the base case (though Street target ~HK$95 implies room if
+        sentiment improves).
+        </div>
+<p class='muted'>Not investment advice. Figures mix company RMB reports and Yahoo HKD market data (~2 Oct 2026); tax (including potential PRC withholding for non-residents) is not modeled. Sources: Yahoo Finance, HKEX FY25 / 1H26 filings.</p>
+    <p class="footer">Generated by <code>build_analysis_reports.py</code>. Cursor canvases are IDE-only; use these HTML pages for browsing.</p>
+  </div>
+</body>
+</html>

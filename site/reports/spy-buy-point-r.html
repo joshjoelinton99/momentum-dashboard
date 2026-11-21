@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SPY Good Buy Points (3R before stop)</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+:root {
+  --bg: #f4f5f2;
+  --panel: #fff;
+  --ink: #1a1d18;
+  --muted: #5c6358;
+  --line: #d8ddd4;
+  --accent: #2f5d50;
+  --accent-soft: #e7f0ec;
+  --danger: #8b3a3a;
+  --ok: #2f5d50;
+  --warn: #8a5a18;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --sans: "Source Sans 3", "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--ink);
+  background:
+    radial-gradient(1000px 420px at 8% -8%, #e8efe9 0%, transparent 55%),
+    var(--bg);
+  line-height: 1.45;
+}
+.wrap { max-width: 1040px; margin: 0 auto; padding: 28px 22px 64px; }
+.topnav { display: flex; gap: 14px; align-items: center; margin-bottom: 18px; font-size: 13px; }
+.topnav a { color: var(--accent); font-weight: 650; text-decoration: none; }
+.topnav a:hover { text-decoration: underline; }
+.brand { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+h1 { font-size: 26px; margin: 4px 0 8px; line-height: 1.2; }
+.sub { color: var(--muted); font-size: 14px; margin: 0 0 20px; max-width: 70ch; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0 20px; }
+@media (max-width: 720px) { .stats { grid-template-columns: 1fr 1fr; } }
+.stat {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
+}
+.stat .v { font-size: 22px; font-weight: 700; color: var(--accent); }
+.stat .v.warn { color: var(--warn); }
+.stat .v.danger { color: var(--danger); }
+.stat .l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; font-weight: 700; }
+.callout {
+  background: var(--accent-soft); border: 1px solid #cfe0d7; border-radius: 10px;
+  padding: 12px 14px; margin: 14px 0 20px; font-size: 14px;
+}
+.callout.warn { background: #f7f0e4; border-color: #e5d3b0; }
+.callout strong { display: block; margin-bottom: 4px; }
+h2 { font-size: 17px; margin: 28px 0 8px; }
+h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 18px 0 6px; }
+.panel {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px 16px; margin: 10px 0 16px;
+}
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 8px 8px; border-top: 1px solid #eef1ea; text-align: left; vertical-align: top; }
+th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 700; border-top: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr.hl td { background: #eef6f2; }
+tr.bad td { background: #f8eeee; }
+.bars { display: grid; gap: 8px; margin: 8px 0 4px; }
+.bar-row { display: grid; grid-template-columns: 56px 1fr 64px; gap: 10px; align-items: center; font-size: 13px; }
+.bar-track { height: 10px; background: #e8ece4; border-radius: 999px; overflow: hidden; position: relative; }
+.bar-fill { height: 100%; background: var(--accent); border-radius: 999px; }
+.bar-fill.neg { background: var(--danger); }
+.chart-wrap { position: relative; height: 280px; margin: 8px 0 4px; }
+.muted { color: var(--muted); font-size: 12px; }
+code { font-family: var(--mono); font-size: 11px; background: #efece6; padding: 1px 5px; border-radius: 4px; }
+.footer { margin-top: 36px; font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topnav">
+      <a href="../analysis_library.html">← Analysis library</a>
+      <span class="muted">HTML report (opens in browser)</span>
+    </div>
+    <div class="brand">Research desk</div>
+    <h1>SPY Good Buy Points (3R before stop)</h1>
+    <p class="sub">SPY R-multiple buy points · primary stop ATR(14) × 2.0 · as of 2026-10-26</p>
+    <div class="stats"><div class="stat"><div class="v">25.9%</div><div class="l">Baseline hit ≥3R</div></div><div class="stat"><div class="v">+0.34R</div><div class="l">Baseline expectancy</div></div><div class="stat"><div class="v">0.40</div><div class="l">Baseline edge score</div></div><div class="stat"><div class="v ok">41.1%</div><div class="l">Best setup hit ≥3R</div></div></div>
+<div class="callout"><strong>What “good buy” means here</strong>
+        Entry = next open after the feature day. Stop = ATR(14) × 2.0
+        (also tested: fixed 3% of entry, ADR(20) × 2).
+        1R = entry−stop. A <em>good buy</em> hits +3R
+        before the stop, within 63 sessions
+        (same-bar both-touch → stop, conservative).
+        <strong>Edge score</strong> = hit_3R_rate × mean_MFE_R — the “win big” coefficient
+        (how often you get there × how far price typically runs in R).
+        Sample: 1994-02-07 → 2026-10-22 · n=8,232.
+        </div>
+<div class="callout warn"><strong>Today vs the pattern</strong> As of 2026-10-26: SPY 765.37, ATR% 0.95, RSI 42, dd from high -2.5%, VIX 19.45. Implied ATR×2 stop ≈ 1.9%. Currently a shallow dip near highs — historically closer to baseline, not the high-edge deep-pullback setup.</div>
+<h2>Stop rule comparison (all SPY days)</h2>
+<p class="muted">Fixed 3% is a common rule-of-thumb; ATR/ADR×2 scales with volatility
+        (typical trading literature: ~1.5–3× ATR). Med stop width:
+        ATR×2 2.4% ·
+        3% fixed 3.0% ·
+        ADR×2 2.2%.</p>
+<div class='panel'><table>
+<tr><th>Stop</th><th class='num'>Hit ≥3R</th><th class='num'>Stop rate</th><th class='num'>Expectancy</th><th class='num'>Mean MFE</th><th class='num'>Edge score</th><th class='num'>Med hold on 3R</th></tr>
+<tr><td>ATR×2</td><td class='num'>25.9%</td><td class='num'>61.5%</td><td class='num'>+0.34R</td><td class='num'>1.55R</td><td class='num'>0.401</td><td class='num'>34d</td></tr>
+<tr><td>Fixed 3%</td><td class='num'>19.7%</td><td class='num'>56.0%</td><td class='num'>+0.38R</td><td class='num'>1.49R</td><td class='num'>0.294</td><td class='num'>41d</td></tr>
+<tr><td>ADR×2</td><td class='num'>27.7%</td><td class='num'>62.8%</td><td class='num'>+0.34R</td><td class='num'>1.56R</td><td class='num'>0.433</td><td class='num'>30d</td></tr>
+</table></div>
+
+    <div class="panel"><div class="chart-wrap"><canvas id="stopCmp"></canvas></div></div>
+    <script>
+      (() => {
+        const cfg = {"type": "bar", "data": {"labels": ["ATR\u00d72", "Fixed 3%", "ADR\u00d72"], "datasets": [{"label": "Hit \u22653R %", "data": [25.85, 19.68, 27.68], "backgroundColor": "rgba(47,93,80,0.75)", "yAxisID": "y"}, {"label": "Edge score \u00d7100", "data": [40.1, 29.4, 43.3], "backgroundColor": "rgba(74,122,181,0.65)", "yAxisID": "y"}]}, "options": {"responsive": true, "maintainAspectRatio": false, "plugins": {"legend": {"position": "bottom"}}, "scales": {"y": {"beginAtZero": true, "title": {"display": true, "text": "% / score\u00d7100"}}}}};
+        const ctx = document.getElementById('stopCmp');
+        if (ctx && window.Chart) new Chart(ctx, cfg);
+      })();
+    </script>
+    
+<div class="callout"><strong>Headline pattern</strong>
+        Best ranked setup under ATR×2:
+        <em>above200 + deep pullback (≤-10%)</em>
+        — hit ≥3R 41.1% (+15.3pp vs baseline),
+        expectancy +0.95R, edge 0.74
+        (n=192).
+        Tight-vol days (very low ATR%) also score high on hit rate — quieter tape + room to 3R
+        before a tight stop gets clipped.
+        </div>
+<h2>Highest-edge setups (ranked)</h2>
+<p class='muted'>Rank score ≈ edge_score + expectancy lift. Primary stop ATR×2. Min bucket size applied in study.</p>
+<div class='panel'><table>
+<tr><th>Setup</th><th>Feature</th><th class='num'>n</th><th class='num'>Hit ≥3R</th><th class='num'>Lift</th><th class='num'>Exp R</th><th class='num'>Edge</th><th class='num'>Rank</th></tr>
+<tr class='hl'><td>above200 + deep pullback (≤-10%)</td><td>combo</td><td class='num'>192</td><td class='num'>41.1%</td><td class='num'>+15.3pp</td><td class='num'>+0.95</td><td class='num'>0.741</td><td class='num'>1.02</td></tr>
+<tr class='hl'><td>very low</td><td>atr_pct</td><td class='num'>1120</td><td class='num'>39.5%</td><td class='num'>+13.7pp</td><td class='num'>+0.61</td><td class='num'>0.685</td><td class='num'>0.82</td></tr>
+<tr class='hl'><td>above200 + pullback (dd -10..-5)</td><td>combo</td><td class='num'>588</td><td class='num'>32.6%</td><td class='num'>+6.8pp</td><td class='num'>+0.71</td><td class='num'>0.562</td><td class='num'>0.78</td></tr>
+<tr class=''><td>&gt;70</td><td>rsi14</td><td class='num'>704</td><td class='num'>34.9%</td><td class='num'>+9.1pp</td><td class='num'>+0.55</td><td class='num'>0.621</td><td class='num'>0.73</td></tr>
+<tr class=''><td>-10..-5%</td><td>dd_from_high_pct</td><td class='num'>1034</td><td class='num'>30.5%</td><td class='num'>+4.6pp</td><td class='num'>+0.65</td><td class='num'>0.512</td><td class='num'>0.72</td></tr>
+<tr class=''><td>≤15</td><td>vix</td><td class='num'>2570</td><td class='num'>32.8%</td><td class='num'>+7.0pp</td><td class='num'>+0.49</td><td class='num'>0.547</td><td class='num'>0.67</td></tr>
+<tr class=''><td>&gt;5%</td><td>pct_above_ma50</td><td class='num'>811</td><td class='num'>27.9%</td><td class='num'>+2.0pp</td><td class='num'>+0.60</td><td class='num'>0.479</td><td class='num'>0.66</td></tr>
+<tr class=''><td>≤30</td><td>rsi14</td><td class='num'>119</td><td class='num'>31.1%</td><td class='num'>+5.2pp</td><td class='num'>+0.45</td><td class='num'>0.507</td><td class='num'>0.63</td></tr>
+<tr class=''><td>-5..-2%</td><td>dd_from_high_pct</td><td class='num'>1695</td><td class='num'>28.1%</td><td class='num'>+2.3pp</td><td class='num'>+0.49</td><td class='num'>0.473</td><td class='num'>0.61</td></tr>
+<tr class=''><td>2..5%</td><td>pct_above_ma50</td><td class='num'>2928</td><td class='num'>30.1%</td><td class='num'>+4.3pp</td><td class='num'>+0.40</td><td class='num'>0.486</td><td class='num'>0.59</td></tr>
+<tr class=''><td>60-70</td><td>rsi14</td><td class='num'>2301</td><td class='num'>29.1%</td><td class='num'>+3.2pp</td><td class='num'>+0.43</td><td class='num'>0.470</td><td class='num'>0.59</td></tr>
+<tr class=''><td>above200 + 5d strength &gt;1%</td><td>combo</td><td class='num'>2387</td><td class='num'>28.2%</td><td class='num'>+2.4pp</td><td class='num'>+0.43</td><td class='num'>0.452</td><td class='num'>0.58</td></tr>
+<tr class=''><td>True</td><td>above_ma200</td><td class='num'>6358</td><td class='num'>28.6%</td><td class='num'>+2.8pp</td><td class='num'>+0.41</td><td class='num'>0.460</td><td class='num'>0.57</td></tr>
+<tr class=''><td>0..1%</td><td>ret_5d</td><td class='num'>1886</td><td class='num'>29.1%</td><td class='num'>+3.2pp</td><td class='num'>+0.37</td><td class='num'>0.455</td><td class='num'>0.56</td></tr>
+<tr class=''><td>above200 + 5d dip ≤-1%</td><td>combo</td><td class='num'>1147</td><td class='num'>27.0%</td><td class='num'>+1.2pp</td><td class='num'>+0.41</td><td class='num'>0.443</td><td class='num'>0.55</td></tr>
+</table></div>
+<h2>Combo setups (above/below 200)</h2>
+<div class='panel'><table>
+<tr><th>Combo</th><th class='num'>n</th><th class='num'>Hit ≥3R</th><th class='num'>Stop%</th><th class='num'>Exp R</th><th class='num'>Edge</th><th class='num'>Med MFE</th></tr>
+<tr class='hl'><td>above200 + deep pullback (≤-10%)</td><td class='num'>192</td><td class='num'>41.1%</td><td class='num'>48.4%</td><td class='num'>+0.95</td><td class='num'>0.741</td><td class='num'>2.33R</td></tr>
+<tr class=''><td>above200 + pullback (dd -10..-5)</td><td class='num'>588</td><td class='num'>32.6%</td><td class='num'>49.5%</td><td class='num'>+0.71</td><td class='num'>0.562</td><td class='num'>1.76R</td></tr>
+<tr class=''><td>above200 + 5d strength &gt;1%</td><td class='num'>2387</td><td class='num'>28.2%</td><td class='num'>59.1%</td><td class='num'>+0.43</td><td class='num'>0.452</td><td class='num'>1.40R</td></tr>
+<tr class=''><td>above200 + 5d dip ≤-1%</td><td class='num'>1147</td><td class='num'>27.0%</td><td class='num'>58.9%</td><td class='num'>+0.41</td><td class='num'>0.443</td><td class='num'>1.55R</td></tr>
+<tr class=''><td>golden cross regime (50&gt;200)</td><td class='num'>6341</td><td class='num'>27.7%</td><td class='num'>60.9%</td><td class='num'>+0.38</td><td class='num'>0.442</td><td class='num'>1.36R</td></tr>
+<tr class=''><td>above200 + near high (&gt;-5%)</td><td class='num'>5578</td><td class='num'>27.8%</td><td class='num'>62.0%</td><td class='num'>+0.36</td><td class='num'>0.441</td><td class='num'>1.32R</td></tr>
+<tr class=''><td>above200 + RSI 40-60</td><td class='num'>3164</td><td class='num'>25.8%</td><td class='num'>61.4%</td><td class='num'>+0.34</td><td class='num'>0.396</td><td class='num'>1.27R</td></tr>
+<tr class=''><td>above200 + VIX 15-25</td><td class='num'>3373</td><td class='num'>25.2%</td><td class='num'>62.6%</td><td class='num'>+0.30</td><td class='num'>0.391</td><td class='num'>1.31R</td></tr>
+<tr class=''><td>below200 (bear)</td><td class='num'>1874</td><td class='num'>16.4%</td><td class='num'>65.2%</td><td class='num'>+0.12</td><td class='num'>0.225</td><td class='num'>1.01R</td></tr>
+</table></div>
+<div class='callout'><strong>Takeaway</strong> Deep pullback ≤−10% above 200: hit 41%, exp +0.95R (n=192) · −10…−5% pullback: hit 33%, exp +0.71R · Near highs (&gt;−5%): hit 28% — closer to coin-flip baseline. Buying dips in an uptrend (still above 200) has been the clearest edge for reaching 3R before the ATR stop; chasing near highs is mostly baseline.</div>
+<h2>Yearly hit ≥3R (ATR×2, all days)</h2>
+
+    <div class="panel"><div class="chart-wrap"><canvas id="yrHit"></canvas></div></div>
+    <script>
+      (() => {
+        const cfg = {"type": "line", "data": {"labels": ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"], "datasets": [{"label": "Hit \u22653R %", "data": [25.11, 68.65, 34.25, 24.51, 37.7, 6.75, 5.16, 1.61, 1.98, 40.48, 15.08, 15.48, 37.05, 13.94, 0.4, 29.76, 44.44, 13.89, 32.8, 42.46, 25.0, 1.19, 21.03, 61.35, 17.93, 38.49, 36.36, 30.56, 4.78, 43.2, 37.3, 32.0, 8.87], "borderColor": "#2f5d50", "backgroundColor": "rgba(47,93,80,0.12)", "fill": true, "pointRadius": 2, "borderWidth": 1.5, "tension": 0.15}, {"label": "Baseline", "data": [25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85, 25.85], "borderColor": "#8a5a18", "borderDash": [6, 4], "pointRadius": 0, "borderWidth": 1.2}]}, "options": {"responsive": true, "maintainAspectRatio": false, "plugins": {"legend": {"position": "bottom"}}, "scales": {"y": {"title": {"display": true, "text": "Hit %"}}, "x": {"ticks": {"maxTicksLimit": 12}}}}};
+        const ctx = document.getElementById('yrHit');
+        if (ctx && window.Chart) new Chart(ctx, cfg);
+      })();
+    </script>
+    
+<h2>Recent ≥3R winners (ATR×2)</h2>
+<div class='panel'><table>
+<tr><th>Entry</th><th class='num'>Entry px</th><th class='num'>Stop%</th><th class='num'>Hold</th><th class='num'>MFE R</th><th class='num'>RSI</th><th class='num'>dd high</th><th>Above 200</th></tr>
+<tr><td>2025-10-13</td><td class='num'>653.60</td><td class='num'>1.80%</td><td class='num'>61</td><td class='num'>3.08</td><td class='num'>42</td><td class='num'>-3.0%</td><td>Yes</td></tr>
+<tr><td>2025-10-14</td><td class='num'>650.16</td><td class='num'>1.95%</td><td class='num'>58</td><td class='num'>3.03</td><td class='num'>53</td><td class='num'>-1.5%</td><td>Yes</td></tr>
+<tr><td>2026-03-27</td><td class='num'>639.26</td><td class='num'>3.00%</td><td class='num'>13</td><td class='num'>3.13</td><td class='num'>33</td><td class='num'>-7.0%</td><td>No</td></tr>
+<tr><td>2026-03-30</td><td class='num'>636.88</td><td class='num'>3.06%</td><td class='num'>11</td><td class='num'>3.07</td><td class='num'>29</td><td class='num'>-8.6%</td><td>No</td></tr>
+<tr><td>2026-03-31</td><td class='num'>635.72</td><td class='num'>3.10%</td><td class='num'>10</td><td class='num'>3.10</td><td class='num'>28</td><td class='num'>-8.9%</td><td>No</td></tr>
+<tr><td>2026-04-01</td><td class='num'>650.60</td><td class='num'>3.24%</td><td class='num'>20</td><td class='num'>3.11</td><td class='num'>43</td><td class='num'>-6.2%</td><td>No</td></tr>
+<tr><td>2026-04-02</td><td class='num'>643.16</td><td class='num'>3.22%</td><td class='num'>10</td><td class='num'>3.17</td><td class='num'>46</td><td class='num'>-5.5%</td><td>No</td></tr>
+<tr><td>2026-04-06</td><td class='num'>652.55</td><td class='num'>3.23%</td><td class='num'>18</td><td class='num'>3.02</td><td class='num'>46</td><td class='num'>-5.4%</td><td>No</td></tr>
+<tr><td>2026-04-07</td><td class='num'>653.34</td><td class='num'>3.09%</td><td class='num'>17</td><td class='num'>3.11</td><td class='num'>49</td><td class='num'>-5.0%</td><td>No</td></tr>
+<tr><td>2026-04-08</td><td class='num'>672.98</td><td class='num'>2.97%</td><td class='num'>22</td><td class='num'>3.08</td><td class='num'>49</td><td class='num'>-5.0%</td><td>No</td></tr>
+<tr><td>2026-04-09</td><td class='num'>671.44</td><td class='num'>3.14%</td><td class='num'>22</td><td class='num'>3.11</td><td class='num'>59</td><td class='num'>-2.5%</td><td>Yes</td></tr>
+<tr><td>2026-04-10</td><td class='num'>677.89</td><td class='num'>3.04%</td><td class='num'>23</td><td class='num'>3.02</td><td class='num'>61</td><td class='num'>-2.0%</td><td>Yes</td></tr>
+<tr><td>2026-04-13</td><td class='num'>674.00</td><td class='num'>2.92%</td><td class='num'>19</td><td class='num'>3.07</td><td class='num'>60</td><td class='num'>-2.0%</td><td>Yes</td></tr>
+<tr><td>2026-04-14</td><td class='num'>684.22</td><td class='num'>2.87%</td><td class='num'>22</td><td class='num'>3.13</td><td class='num'>64</td><td class='num'>-1.1%</td><td>Yes</td></tr>
+<tr><td>2026-04-15</td><td class='num'>691.76</td><td class='num'>2.81%</td><td class='num'>30</td><td class='num'>3.07</td><td class='num'>68</td><td class='num'>0.0%</td><td>Yes</td></tr>
+<tr><td>2026-04-16</td><td class='num'>697.53</td><td class='num'>2.71%</td><td class='num'>31</td><td class='num'>3.12</td><td class='num'>70</td><td class='num'>0.0%</td><td>Yes</td></tr>
+<tr><td>2026-04-29</td><td class='num'>707.42</td><td class='num'>2.28%</td><td class='num'>22</td><td class='num'>3.04</td><td class='num'>67</td><td class='num'>-0.5%</td><td>Yes</td></tr>
+<tr><td>2026-05-04</td><td class='num'>716.44</td><td class='num'>2.16%</td><td class='num'>63</td><td class='num'>3.56</td><td class='num'>72</td><td class='num'>0.0%</td><td>Yes</td></tr>
+<tr><td>2026-05-05</td><td class='num'>718.13</td><td class='num'>2.14%</td><td class='num'>62</td><td class='num'>3.47</td><td class='num'>69</td><td class='num'>-0.4%</td><td>Yes</td></tr>
+<tr><td>2026-05-06</td><td class='num'>724.49</td><td class='num'>2.11%</td><td class='num'>61</td><td class='num'>3.08</td><td class='num'>71</td><td class='num'>0.0%</td><td>Yes</td></tr>
+</table></div>
+<p class="muted">ATR stop convention ≈ 1.5–3× ATR; R-multiple per Van Tharp / standard risk texts.
+        Regenerated with <code>python3 spy_buy_point_r_study.py</code>.</p>
+    <p class="footer">Generated by <code>build_analysis_reports.py</code>. Cursor canvases are IDE-only; use these HTML pages for browsing.</p>
+  </div>
+</body>
+</html>

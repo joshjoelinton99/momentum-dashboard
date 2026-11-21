@@ -1,0 +1,51 @@
+name: Update dashboard
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  schedule:
+    # 22:30 UTC Monday–Friday is 6:30 AM Hong Kong time Tuesday–Saturday,
+    # after the US cash close has been published.
+    - cron: "30 22 * * 1-5"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install
+        run: pip install -r requirements.txt
+      - name: Refresh the books
+        if: github.event_name != 'push'
+        run: |
+          python momentum_pullback.py --start 2018-01-01 --side long --skip-months none --no-dashboard
+          python momentum_pullback.py --start 2018-01-01 --side short --skip-months none --no-dashboard
+          python build_site.py
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -114,6 +114,7 @@ def index_html(date: str) -> str:
     <a class="card short" href="short.html"><strong>Short momentum rally</strong><span>Equity curve, monthly map, and candidates</span></a>
     <a class="card breadth" href="breadth.html"><strong>Market breadth</strong><span>Advance/decline, moving averages, new highs, and volatility</span></a>
     <a class="card library" href="library.html"><strong>Research library</strong><span>Studies and the Hong Kong dividend pages</span></a>
+    <a class="card library" href="reports/crash-then-rebound.html"><strong>Crash then huge rebound</strong><span>What usually follows a one-day crash and next-day rip</span></a>
     <a class="card library" href="reports/ma-extension.html"><strong>MA extension — how wide / what next</strong><span>NDX, SPX, SOXX distance below moving averages and forward returns</span></a>
     <a class="card library" href="breakout_dashboard.html"><strong>Tight breakout journal</strong><span>Logged breakouts and how they followed through</span></a>
   </div>

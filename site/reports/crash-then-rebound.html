@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Crash Then Huge Rebound — What Next</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+:root {
+  --bg: #f4f5f2;
+  --panel: #fff;
+  --ink: #1a1d18;
+  --muted: #5c6358;
+  --line: #d8ddd4;
+  --accent: #2f5d50;
+  --accent-soft: #e7f0ec;
+  --danger: #8b3a3a;
+  --ok: #2f5d50;
+  --warn: #8a5a18;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --sans: "Source Sans 3", "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--ink);
+  background:
+    radial-gradient(1000px 420px at 8% -8%, #e8efe9 0%, transparent 55%),
+    var(--bg);
+  line-height: 1.45;
+}
+.wrap { max-width: 1040px; margin: 0 auto; padding: 28px 22px 64px; }
+.topnav { display: flex; gap: 14px; align-items: center; margin-bottom: 18px; font-size: 13px; }
+.topnav a { color: var(--accent); font-weight: 650; text-decoration: none; }
+.topnav a:hover { text-decoration: underline; }
+.brand { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+h1 { font-size: 26px; margin: 4px 0 8px; line-height: 1.2; }
+.sub { color: var(--muted); font-size: 14px; margin: 0 0 20px; max-width: 70ch; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0 20px; }
+@media (max-width: 720px) { .stats { grid-template-columns: 1fr 1fr; } }
+.stat {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
+}
+.stat .v { font-size: 22px; font-weight: 700; color: var(--accent); }
+.stat .v.warn { color: var(--warn); }
+.stat .v.danger { color: var(--danger); }
+.stat .l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; font-weight: 700; }
+.callout {
+  background: var(--accent-soft); border: 1px solid #cfe0d7; border-radius: 10px;
+  padding: 12px 14px; margin: 14px 0 20px; font-size: 14px;
+}
+.callout.warn { background: #f7f0e4; border-color: #e5d3b0; }
+.callout strong { display: block; margin-bottom: 4px; }
+h2 { font-size: 17px; margin: 28px 0 8px; }
+h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 18px 0 6px; }
+.panel {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px 16px; margin: 10px 0 16px;
+}
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 8px 8px; border-top: 1px solid #eef1ea; text-align: left; vertical-align: top; }
+th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 700; border-top: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr.hl td { background: #eef6f2; }
+tr.bad td { background: #f8eeee; }
+.bars { display: grid; gap: 8px; margin: 8px 0 4px; }
+.bar-row { display: grid; grid-template-columns: 56px 1fr 64px; gap: 10px; align-items: center; font-size: 13px; }
+.bar-track { height: 10px; background: #e8ece4; border-radius: 999px; overflow: hidden; position: relative; }
+.bar-fill { height: 100%; background: var(--accent); border-radius: 999px; }
+.bar-fill.neg { background: var(--danger); }
+.chart-wrap { position: relative; height: 280px; margin: 8px 0 4px; }
+.muted { color: var(--muted); font-size: 12px; }
+code { font-family: var(--mono); font-size: 11px; background: #efece6; padding: 1px 5px; border-radius: 4px; }
+.footer { margin-top: 36px; font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topnav">
+      <a href="../library.html">← Analysis library</a>
+      <span class="muted">HTML report (opens in browser)</span>
+    </div>
+    <div class="brand">Research desk</div>
+    <h1>Crash Then Huge Rebound — What Next</h1>
+    <p class="sub">Huge one-day drop then huge next-day rebound · forwards from rebound close · as of 2026-11-23</p>
+    <div class="stats"><div class="stat"><div class="v">19</div><div class="l">NDX events</div></div><div class="stat"><div class="v danger">-0.0%</div><div class="l">NDX med +1d</div></div><div class="stat"><div class="v danger">-0.0%</div><div class="l">NDX med +5d</div></div><div class="stat"><div class="v ok">+0.0%</div><div class="l">NDX med 3M</div></div></div>
+<div class="callout warn"><strong>Today matches the pattern</strong>
+        2026-11-20 → 2026-11-23:
+        NDX -0.1% then +0.1%;
+        SOXX -0.1% then +0.1%.
+        Thresholds — NDX ≤-0.0% / ≥+0.1%;
+        SOXX super ≤-0.1% / ≥+0.1%.
+        Forwards are from the <em>rebound close</em>.
+        </div>
+<div class="callout"><strong>Read-across</strong>
+        After NDX crash+rebound pairs (n=19), the next 1–5 sessions usually gave back —
+        median about −2.5% next day and −3.6% by day 5 (about 80% red on day 1).
+        By 3–6 months the median turns mildly positive. Exact NDX+SOXX same-day
+        super-large pairs are almost unique historically (only Mar 2020 before today);
+        that one prior case also sold off hard for a week, then recovered strongly by 1–3 months.
+        </div>
+<h2>NDX (drop ≤−4%, rebound ≥+5%) — n=19</h2>
+<div class='panel'><table>
+<tr><th>Horizon</th><th class='num'>Mean</th><th class='num'>Median</th><th class='num'>% neg</th><th class='num'>n</th></tr>
+<tr><td>+1d</td><td class='num'>-0.0%</td><td class='num'>-0.0%</td><td class='num'>83%</td><td class='num'>18</td></tr>
+<tr><td>+2d</td><td class='num'>-0.0%</td><td class='num'>-0.0%</td><td class='num'>78%</td><td class='num'>18</td></tr>
+<tr><td>+3d</td><td class='num'>-0.0%</td><td class='num'>-0.0%</td><td class='num'>83%</td><td class='num'>18</td></tr>
+<tr><td>+4d</td><td class='num'>-0.0%</td><td class='num'>-0.1%</td><td class='num'>67%</td><td class='num'>18</td></tr>
+<tr><td>+5d</td><td class='num'>-0.0%</td><td class='num'>-0.0%</td><td class='num'>56%</td><td class='num'>18</td></tr>
+<tr><td>1W</td><td class='num'>-0.0%</td><td class='num'>-0.0%</td><td class='num'>56%</td><td class='num'>18</td></tr>
+<tr><td>1M</td><td class='num'>-0.0%</td><td class='num'>-0.0%</td><td class='num'>61%</td><td class='num'>18</td></tr>
+<tr><td>3M</td><td class='num'>+0.0%</td><td class='num'>+0.0%</td><td class='num'>39%</td><td class='num'>18</td></tr>
+<tr><td>6M</td><td class='num'>+0.0%</td><td class='num'>+0.0%</td><td class='num'>50%</td><td class='num'>18</td></tr>
+</table>
+<p class='muted'>Further DD next 126d — mean -0.2%, median -0.2%, p10 -0.4%.</p>
+</div>
+<div class='panel'><table>
+<tr><th>Drop</th><th>Rebound</th><th class='num'>Drop%</th><th class='num'>Reb%</th><th class='num'>+1d</th><th class='num'>+5d</th><th class='num'>1M</th><th class='num'>3M</th></tr>
+<tr><td>2000-05-23</td><td>2000-05-24</td><td class='num'>-0.1%</td><td class='num'>+0.1%</td><td class='num'>-0.0%</td><td class='num'>+0.1%</td><td class='num'>+0.2%</td><td class='num'>+0.2%</td></tr>
+<tr><td>2000-11-22</td><td>2000-11-24</td><td class='num'>-0.0%</td><td class='num'>+0.1%</td><td class='num'>-0.0%</td><td class='num'>-0.1%</td><td class='num'>-0.2%</td><td class='num'>-0.3%</td></tr>
+<tr><td>2001-01-02</td><td>2001-01-03</td><td class='num'>-0.1%</td><td class='num'>+0.2%</td><td class='num'>-0.0%</td><td class='num'>-0.0%</td><td class='num'>-0.0%</td><td class='num'>-0.5%</td></tr>
+<tr><td>2001-03-12</td><td>2001-03-13</td><td class='num'>-0.1%</td><td class='num'>+0.1%</td><td class='num'>-0.0%</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td><td class='num'>+0.0%</td></tr>
+<tr><td>2002-07-23</td><td>2002-07-24</td><td class='num'>-0.0%</td><td class='num'>+0.1%</td><td class='num'>-0.1%</td><td class='num'>+0.0%</td><td class='num'>+0.1%</td><td class='num'>+0.0%</td></tr>
+<tr><td>2008-09-29</td><td>2008-09-30</td><td class='num'>-0.1%</td><td class='num'>+0.1%</td><td class='num'>-0.0%</td><td class='num'>-0.2%</td><td class='num'>-0.2%</td><td class='num'>-0.2%</td></tr>
+<tr><td>2008-10-15</td><td>2008-10-16</td><td class='num'>-0.1%</td><td class='num'>+0.1%</td><td class='num'>-0.0%</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td></tr>
+<tr><td>2008-11-12</td><td>2008-11-13</td><td class='num'>-0.0%</td><td class='num'>+0.1%</td><td class='num'>-0.0%</td><td class='num'>-0.2%</td><td class='num'>-0.0%</td><td class='num'>-0.0%</td></tr>
+<tr><td>2020-03-09</td><td>2020-03-10</td><td class='num'>-0.1%</td><td class='num'>+0.1%</td><td class='num'>-0.0%</td><td class='num'>-0.1%</td><td class='num'>-0.0%</td><td class='num'>+0.2%</td></tr>
+<tr><td>2020-03-12</td><td>2020-03-13</td><td class='num'>-0.1%</td><td class='num'>+0.1%</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td><td class='num'>+0.1%</td><td class='num'>+0.2%</td></tr>
+<tr><td>2020-03-16</td><td>2020-03-17</td><td class='num'>-0.1%</td><td class='num'>+0.1%</td><td class='num'>-0.0%</td><td class='num'>+0.0%</td><td class='num'>+0.2%</td><td class='num'>+0.3%</td></tr>
+<tr class='hl'><td>2026-11-20</td><td>2026-11-23</td><td class='num'>-0.1%</td><td class='num'>+0.1%</td><td class='num'>nan%</td><td class='num'>nan%</td><td class='num'>nan%</td><td class='num'>nan%</td></tr>
+</table></div>
+<h2>SPX (drop ≤−3%, rebound ≥+4%) — n=38</h2>
+<div class='panel'><table>
+<tr><th>Horizon</th><th class='num'>Mean</th><th class='num'>Median</th><th class='num'>% neg</th><th class='num'>n</th></tr>
+<tr><td>+1d</td><td class='num'>-0.0%</td><td class='num'>-0.0%</td><td class='num'>57%</td><td class='num'>37</td></tr>
+<tr><td>+2d</td><td class='num'>+0.0%</td><td class='num'>+0.0%</td><td class='num'>46%</td><td class='num'>37</td></tr>
+<tr><td>+3d</td><td class='num'>+0.0%</td><td class='num'>-0.0%</td><td class='num'>51%</td><td class='num'>37</td></tr>
+<tr><td>+4d</td><td class='num'>-0.0%</td><td class='num'>-0.0%</td><td class='num'>51%</td><td class='num'>37</td></tr>
+<tr><td>+5d</td><td class='num'>-0.0%</td><td class='num'>+0.0%</td><td class='num'>49%</td><td class='num'>37</td></tr>
+<tr><td>1W</td><td class='num'>-0.0%</td><td class='num'>+0.0%</td><td class='num'>49%</td><td class='num'>37</td></tr>
+<tr><td>1M</td><td class='num'>+0.0%</td><td class='num'>+0.0%</td><td class='num'>41%</td><td class='num'>37</td></tr>
+<tr><td>3M</td><td class='num'>+0.0%</td><td class='num'>+0.0%</td><td class='num'>38%</td><td class='num'>37</td></tr>
+<tr><td>6M</td><td class='num'>+0.0%</td><td class='num'>+0.1%</td><td class='num'>35%</td><td class='num'>37</td></tr>
+</table>
+<p class='muted'>Further DD next 126d — mean -0.2%, median -0.2%, p10 -0.3%.</p>
+</div>
+<div class='panel'><table>
+<tr><th>Drop</th><th>Rebound</th><th class='num'>Drop%</th><th class='num'>Reb%</th><th class='num'>+1d</th><th class='num'>+5d</th><th class='num'>1M</th><th class='num'>3M</th></tr>
+<tr><td>2008-10-15</td><td>2008-10-16</td><td class='num'>-0.1%</td><td class='num'>+0.0%</td><td class='num'>-0.0%</td><td class='num'>-0.0%</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td></tr>
+<tr><td>2008-10-27</td><td>2008-10-28</td><td class='num'>-0.0%</td><td class='num'>+0.1%</td><td class='num'>-0.0%</td><td class='num'>+0.1%</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td></tr>
+<tr><td>2008-11-12</td><td>2008-11-13</td><td class='num'>-0.1%</td><td class='num'>+0.1%</td><td class='num'>-0.0%</td><td class='num'>-0.2%</td><td class='num'>-0.0%</td><td class='num'>-0.1%</td></tr>
+<tr><td>2008-11-20</td><td>2008-11-21</td><td class='num'>-0.1%</td><td class='num'>+0.1%</td><td class='num'>+0.1%</td><td class='num'>+0.0%</td><td class='num'>+0.1%</td><td class='num'>-0.0%</td></tr>
+<tr><td>2009-01-20</td><td>2009-01-21</td><td class='num'>-0.1%</td><td class='num'>+0.0%</td><td class='num'>-0.0%</td><td class='num'>+0.0%</td><td class='num'>-0.1%</td><td class='num'>+0.0%</td></tr>
+<tr><td>2009-02-23</td><td>2009-02-24</td><td class='num'>-0.0%</td><td class='num'>+0.0%</td><td class='num'>-0.0%</td><td class='num'>-0.1%</td><td class='num'>+0.1%</td><td class='num'>+0.2%</td></tr>
+<tr><td>2011-08-08</td><td>2011-08-09</td><td class='num'>-0.1%</td><td class='num'>+0.0%</td><td class='num'>-0.0%</td><td class='num'>+0.0%</td><td class='num'>+0.0%</td><td class='num'>+0.1%</td></tr>
+<tr><td>2011-08-10</td><td>2011-08-11</td><td class='num'>-0.0%</td><td class='num'>+0.0%</td><td class='num'>+0.0%</td><td class='num'>-0.0%</td><td class='num'>-0.0%</td><td class='num'>+0.0%</td></tr>
+<tr><td>2020-03-09</td><td>2020-03-10</td><td class='num'>-0.1%</td><td class='num'>+0.0%</td><td class='num'>-0.0%</td><td class='num'>-0.1%</td><td class='num'>-0.0%</td><td class='num'>+0.1%</td></tr>
+<tr><td>2020-03-12</td><td>2020-03-13</td><td class='num'>-0.1%</td><td class='num'>+0.1%</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td><td class='num'>+0.0%</td><td class='num'>+0.1%</td></tr>
+<tr><td>2020-03-16</td><td>2020-03-17</td><td class='num'>-0.1%</td><td class='num'>+0.1%</td><td class='num'>-0.1%</td><td class='num'>-0.0%</td><td class='num'>+0.1%</td><td class='num'>+0.2%</td></tr>
+<tr class='hl'><td>2026-11-20</td><td>2026-11-23</td><td class='num'>-0.0%</td><td class='num'>+0.1%</td><td class='num'>nan%</td><td class='num'>nan%</td><td class='num'>nan%</td><td class='num'>nan%</td></tr>
+</table></div>
+<h2>SOXX super-large (≤−8% / ≥+10%) — n=2</h2>
+<div class='panel'><table>
+<tr><th>Horizon</th><th class='num'>Mean</th><th class='num'>Median</th><th class='num'>% neg</th><th class='num'>n</th></tr>
+<tr><td>+1d</td><td class='num'>-0.2%</td><td class='num'>-0.2%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>+2d</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>+3d</td><td class='num'>-0.2%</td><td class='num'>-0.2%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>+4d</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>+5d</td><td class='num'>-0.2%</td><td class='num'>-0.2%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>1W</td><td class='num'>-0.2%</td><td class='num'>-0.2%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>1M</td><td class='num'>+0.1%</td><td class='num'>+0.1%</td><td class='num'>0%</td><td class='num'>1</td></tr>
+<tr><td>3M</td><td class='num'>+0.2%</td><td class='num'>+0.2%</td><td class='num'>0%</td><td class='num'>1</td></tr>
+<tr><td>6M</td><td class='num'>+0.4%</td><td class='num'>+0.4%</td><td class='num'>0%</td><td class='num'>1</td></tr>
+</table>
+<p class='muted'>Further DD next 126d — mean -0.1%, median -0.1%, p10 -0.1%.</p>
+</div>
+<div class='panel'><table>
+<tr><th>Drop</th><th>Rebound</th><th class='num'>Drop%</th><th class='num'>Reb%</th><th class='num'>+1d</th><th class='num'>+5d</th><th class='num'>1M</th><th class='num'>3M</th></tr>
+<tr><td>2020-03-12</td><td>2020-03-13</td><td class='num'>-0.1%</td><td class='num'>+0.1%</td><td class='num'>-0.2%</td><td class='num'>-0.2%</td><td class='num'>+0.1%</td><td class='num'>+0.2%</td></tr>
+<tr class='hl'><td>2026-11-20</td><td>2026-11-23</td><td class='num'>-0.1%</td><td class='num'>+0.1%</td><td class='num'>nan%</td><td class='num'>nan%</td><td class='num'>nan%</td><td class='num'>nan%</td></tr>
+</table></div>
+<h2>SOXX large (≤−6% / ≥+7%) — more history — n=5</h2>
+<div class='panel'><table>
+<tr><th>Horizon</th><th class='num'>Mean</th><th class='num'>Median</th><th class='num'>% neg</th><th class='num'>n</th></tr>
+<tr><td>+1d</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td><td class='num'>75%</td><td class='num'>4</td></tr>
+<tr><td>+2d</td><td class='num'>-0.0%</td><td class='num'>-0.0%</td><td class='num'>50%</td><td class='num'>4</td></tr>
+<tr><td>+3d</td><td class='num'>-0.1%</td><td class='num'>-0.0%</td><td class='num'>50%</td><td class='num'>4</td></tr>
+<tr><td>+4d</td><td class='num'>-0.0%</td><td class='num'>-0.0%</td><td class='num'>75%</td><td class='num'>4</td></tr>
+<tr><td>+5d</td><td class='num'>-0.0%</td><td class='num'>+0.0%</td><td class='num'>25%</td><td class='num'>4</td></tr>
+<tr><td>1W</td><td class='num'>-0.0%</td><td class='num'>+0.0%</td><td class='num'>25%</td><td class='num'>4</td></tr>
+<tr><td>1M</td><td class='num'>+0.2%</td><td class='num'>+0.2%</td><td class='num'>0%</td><td class='num'>4</td></tr>
+<tr><td>3M</td><td class='num'>+0.2%</td><td class='num'>+0.2%</td><td class='num'>25%</td><td class='num'>4</td></tr>
+<tr><td>6M</td><td class='num'>+0.3%</td><td class='num'>+0.3%</td><td class='num'>0%</td><td class='num'>4</td></tr>
+</table>
+<p class='muted'>Further DD next 126d — mean -0.1%, median -0.1%, p10 -0.1%.</p>
+</div>
+<div class='panel'><table>
+<tr><th>Drop</th><th>Rebound</th><th class='num'>Drop%</th><th class='num'>Reb%</th><th class='num'>+1d</th><th class='num'>+5d</th><th class='num'>1M</th><th class='num'>3M</th></tr>
+<tr><td>2002-10-16</td><td>2002-10-17</td><td class='num'>-0.1%</td><td class='num'>+0.1%</td><td class='num'>+0.0%</td><td class='num'>+0.1%</td><td class='num'>+0.2%</td><td class='num'>+0.1%</td></tr>
+<tr><td>2002-10-22</td><td>2002-10-23</td><td class='num'>-0.1%</td><td class='num'>+0.1%</td><td class='num'>-0.0%</td><td class='num'>+0.0%</td><td class='num'>+0.3%</td><td class='num'>-0.0%</td></tr>
+<tr><td>2020-03-12</td><td>2020-03-13</td><td class='num'>-0.1%</td><td class='num'>+0.1%</td><td class='num'>-0.2%</td><td class='num'>-0.2%</td><td class='num'>+0.1%</td><td class='num'>+0.2%</td></tr>
+<tr><td>2020-03-16</td><td>2020-03-17</td><td class='num'>-0.2%</td><td class='num'>+0.1%</td><td class='num'>-0.1%</td><td class='num'>+0.0%</td><td class='num'>+0.2%</td><td class='num'>+0.4%</td></tr>
+<tr class='hl'><td>2026-11-20</td><td>2026-11-23</td><td class='num'>-0.1%</td><td class='num'>+0.1%</td><td class='num'>nan%</td><td class='num'>nan%</td><td class='num'>nan%</td><td class='num'>nan%</td></tr>
+</table></div>
+<h2>NDX + SOXX same-day crash+rebound — n=2</h2>
+<p class='muted'>Both names meet the primary NDX and SOXX super-large bars on the same two days.</p>
+<div class='panel'><strong>2020-03-12 → 2020-03-13</strong><br/>NDX -0.1%/+0.1%; SOXX -0.1%/+0.1%</div>
+<div class='panel'><strong>2026-11-20 → 2026-11-23</strong><br/>NDX -0.1%/+0.1%; SOXX -0.1%/+0.1%</div>
+<h3>Combo → NDX</h3>
+<div class='panel'><table>
+<tr><th>Horizon</th><th class='num'>Mean</th><th class='num'>Median</th><th class='num'>% neg</th><th class='num'>n</th></tr>
+<tr><td>+1d</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>+2d</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>+3d</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>+4d</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>+5d</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>1W</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>1M</td><td class='num'>+0.1%</td><td class='num'>+0.1%</td><td class='num'>0%</td><td class='num'>1</td></tr>
+<tr><td>3M</td><td class='num'>+0.2%</td><td class='num'>+0.2%</td><td class='num'>0%</td><td class='num'>1</td></tr>
+<tr><td>6M</td><td class='num'>+0.4%</td><td class='num'>+0.4%</td><td class='num'>0%</td><td class='num'>1</td></tr>
+</table>
+<p class='muted'>Further DD next 126d — mean -0.1%, median -0.1%, p10 -0.1%.</p>
+</div>
+<h3>Combo → SOXX</h3>
+<div class='panel'><table>
+<tr><th>Horizon</th><th class='num'>Mean</th><th class='num'>Median</th><th class='num'>% neg</th><th class='num'>n</th></tr>
+<tr><td>+1d</td><td class='num'>-0.2%</td><td class='num'>-0.2%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>+2d</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>+3d</td><td class='num'>-0.2%</td><td class='num'>-0.2%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>+4d</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>+5d</td><td class='num'>-0.2%</td><td class='num'>-0.2%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>1W</td><td class='num'>-0.2%</td><td class='num'>-0.2%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>1M</td><td class='num'>+0.1%</td><td class='num'>+0.1%</td><td class='num'>0%</td><td class='num'>1</td></tr>
+<tr><td>3M</td><td class='num'>+0.2%</td><td class='num'>+0.2%</td><td class='num'>0%</td><td class='num'>1</td></tr>
+<tr><td>6M</td><td class='num'>+0.4%</td><td class='num'>+0.4%</td><td class='num'>0%</td><td class='num'>1</td></tr>
+</table>
+<p class='muted'>Further DD next 126d — mean -0.1%, median -0.1%, p10 -0.1%.</p>
+</div>
+<h3>Combo → SPX</h3>
+<div class='panel'><table>
+<tr><th>Horizon</th><th class='num'>Mean</th><th class='num'>Median</th><th class='num'>% neg</th><th class='num'>n</th></tr>
+<tr><td>+1d</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>+2d</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>+3d</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>+4d</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>+5d</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>1W</td><td class='num'>-0.1%</td><td class='num'>-0.1%</td><td class='num'>100%</td><td class='num'>1</td></tr>
+<tr><td>1M</td><td class='num'>+0.0%</td><td class='num'>+0.0%</td><td class='num'>0%</td><td class='num'>1</td></tr>
+<tr><td>3M</td><td class='num'>+0.1%</td><td class='num'>+0.1%</td><td class='num'>0%</td><td class='num'>1</td></tr>
+<tr><td>6M</td><td class='num'>+0.2%</td><td class='num'>+0.2%</td><td class='num'>0%</td><td class='num'>1</td></tr>
+</table>
+<p class='muted'>Further DD next 126d — mean -0.1%, median -0.1%, p10 -0.2%.</p>
+</div>
+    <p class="footer">Generated by <code>build_analysis_reports.py</code>. Cursor canvases are IDE-only; use these HTML pages for browsing.</p>
+  </div>
+</body>
+</html>

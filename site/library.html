@@ -278,10 +278,10 @@
     <aside>
       <div class="brand">Research desk</div>
       <h1>Futu Stock Analysis Library</h1>
-      <p class="sub">Catalog of studies, dashboards, and Cursor canvases. Updated 2026-11-24.</p>
+      <p class="sub">Catalog of studies, dashboards, and Cursor canvases. Updated 2026-11-25.</p>
       <input class="search" id="q" type="search" placeholder="Search title, tags, summary…" />
       <nav id="folders">
-        <button type="button" class="folder active" data-folder="__all__"><span class="folder-name">All analyses</span><span class="folder-count">60</span></button><button type="button" class="folder" data-folder="tight-breakouts"><span class="folder-name">Tight Breakouts</span><span class="folder-count">1</span></button><button type="button" class="folder" data-folder="soxx"><span class="folder-name">SOXX / Semiconductors</span><span class="folder-count">5</span></button><button type="button" class="folder" data-folder="chip-crash"><span class="folder-name">Chip Names · Crash Aftermath</span><span class="folder-count">3</span></button><button type="button" class="folder" data-folder="event-studies"><span class="folder-name">Event Studies</span><span class="folder-count">11</span></button><button type="button" class="folder" data-folder="market-ops"><span class="folder-name">Market Ops &amp; Breadth</span><span class="folder-count">4</span></button><button type="button" class="folder" data-folder="macros"><span class="folder-name">Macro Overlays</span><span class="folder-count">5</span></button><button type="button" class="folder" data-folder="hk-dividend"><span class="folder-name">HK Dividend Equity</span><span class="folder-count">31</span></button>
+        <button type="button" class="folder active" data-folder="__all__"><span class="folder-name">All analyses</span><span class="folder-count">61</span></button><button type="button" class="folder" data-folder="tight-breakouts"><span class="folder-name">Tight Breakouts</span><span class="folder-count">1</span></button><button type="button" class="folder" data-folder="soxx"><span class="folder-name">SOXX / Semiconductors</span><span class="folder-count">5</span></button><button type="button" class="folder" data-folder="chip-crash"><span class="folder-name">Chip Names · Crash Aftermath</span><span class="folder-count">3</span></button><button type="button" class="folder" data-folder="event-studies"><span class="folder-name">Event Studies</span><span class="folder-count">12</span></button><button type="button" class="folder" data-folder="market-ops"><span class="folder-name">Market Ops &amp; Breadth</span><span class="folder-count">4</span></button><button type="button" class="folder" data-folder="macros"><span class="folder-name">Macro Overlays</span><span class="folder-count">5</span></button><button type="button" class="folder" data-folder="hk-dividend"><span class="folder-name">HK Dividend Equity</span><span class="folder-count">31</span></button>
       </nav>
       <p class="hint">
         Prefer <b>Open report page</b> — those are normal browser pages with charts/tables.
@@ -294,7 +294,7 @@
       <div class="toolbar">
         <div>
           <h2 id="view-title">All analyses</h2>
-          <p id="view-sub">60 recorded studies</p>
+          <p id="view-sub">61 recorded studies</p>
         </div>
       </div>
       <section class="folder-blurb" data-folder-blurb="tight-breakouts"><h2>Tight Breakouts</h2><p>Weekly journal of observed breakouts. Track stop distance, volume, and 5d/10d/1m/3m follow-through. Target: SL &lt; 8% with volume.</p></section><section class="folder-blurb" data-folder-blurb="soxx"><h2>SOXX / Semiconductors</h2><p>Gap-fill studies, unfilled gap-ups, MA200 filter, and Jul’24 vs Jun’26 path analog.</p></section><section class="folder-blurb" data-folder-blurb="chip-crash"><h2>Chip Names · Crash Aftermath</h2><p>Peak-to-trough ≥40% inside ~1 month: forward returns from the trough for INTC, MU, and peers.</p></section><section class="folder-blurb" data-folder-blurb="event-studies"><h2>Event Studies</h2><p>Forward-return studies around market signals (divergence, rallies, banks, FX/yields, geopolitics).</p></section><section class="folder-blurb" data-folder-blurb="market-ops"><h2>Market Ops &amp; Breadth</h2><p>Daily breadth, weekly screener reports, the live HTML dashboard, and the momentum pullback backtest.</p></section><section class="folder-blurb" data-folder-blurb="macros"><h2>Macro Overlays</h2><p>Cross-asset studies: JPY carry, Treasury yields, late-cycle banks.</p></section><section class="folder-blurb" data-folder-blurb="hk-dividend"><h2>HK Dividend Equity</h2><p>High-yield equity research for Hong Kong listed names (telcos, utilities, REITs).</p></section>
@@ -1072,6 +1072,24 @@
               <div class="meta-row"><span class="k">Script</span><code>crash_rebound_fade_study.py</code></div>
               <h3>Artifacts</h3>
               <ul class="arts"><li class="art ok"><a href="reports/crash-rebound-fade.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/crash-rebound-fade.html</code><span class="badge ok">available</span></li><li class="art ok"><a href="crash_rebound_fade_summary.json" target="_blank" rel="noopener">Summary JSON</a><code>output/crash_rebound_fade_summary.json</code><span class="badge ok">available</span></li><li class="art ok"><a href="crash_rebound_fade_events.csv" target="_blank" rel="noopener">Events CSV</a><code>output/crash_rebound_fade_events.csv</code><span class="badge ok">available</span></li></ul>
+            </article>
+            
+            <article class="card" data-folder="event-studies" data-id="crash-rebound-double-fade"
+                     data-search="crash → rebound → double fade — what next 2026-11-20→25: ndx −5.6%/+6.9%/−2.0%/−3.3%, soxx −10.6%/+13.6%/−8.3%/−5.5%. exact soxx 4-day path and ndx+soxx combo are unique historically. soft soxx (−5%/+6%/−3%/−3%) adds only mar’20, which bounced +10.7% next day then ran into 1–3m. ndx alone n=8: +5d med ~+3%, but 1–6m medians weak/mixed. ndx soxx crash rebound fade forward">
+              <header class="card-head">
+                <div>
+                  <h2><a class="title-link" href="reports/crash-rebound-double-fade.html" target="_blank" rel="noopener">Crash → Rebound → Double Fade — What Next</a></h2><div class="open-row"><a class="btn" href="reports/crash-rebound-double-fade.html" target="_blank" rel="noopener">Open report page</a></div>
+                  <div class="meta-row">
+                    <span class="k">Date</span><span>2026-11-25</span>
+                    <span class="k">Folder</span><span>event-studies</span>
+                  </div>
+                </div>
+              </header>
+              <p class="summary">2026-11-20→25: NDX −5.6%/+6.9%/−2.0%/−3.3%, SOXX −10.6%/+13.6%/−8.3%/−5.5%. Exact SOXX 4-day path and NDX+SOXX combo are unique historically. Soft SOXX (−5%/+6%/−3%/−3%) adds only Mar’20, which bounced +10.7% next day then ran into 1–3M. NDX alone n=8: +5d med ~+3%, but 1–6M medians weak/mixed.</p>
+              <div class="tags"><span class="tag">NDX</span><span class="tag">SOXX</span><span class="tag">crash</span><span class="tag">rebound</span><span class="tag">fade</span><span class="tag">forward</span></div>
+              <div class="meta-row"><span class="k">Script</span><code>crash_rebound_double_fade_study.py</code></div>
+              <h3>Artifacts</h3>
+              <ul class="arts"><li class="art ok"><a href="reports/crash-rebound-double-fade.html" target="_blank" rel="noopener">Open report page</a><code>output/reports/crash-rebound-double-fade.html</code><span class="badge ok">available</span></li><li class="art ok"><a href="crash_rebound_double_fade_summary.json" target="_blank" rel="noopener">Summary JSON</a><code>output/crash_rebound_double_fade_summary.json</code><span class="badge ok">available</span></li><li class="art ok"><a href="crash_rebound_double_fade_events.csv" target="_blank" rel="noopener">Events CSV</a><code>output/crash_rebound_double_fade_events.csv</code><span class="badge ok">available</span></li></ul>
             </article>
             
             <article class="card" data-folder="soxx" data-id="soxx-oneday-10pct"

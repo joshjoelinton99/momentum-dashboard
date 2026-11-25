@@ -115,6 +115,7 @@ def index_html(date: str) -> str:
     <a class="card breadth" href="breadth.html"><strong>Market breadth</strong><span>Advance/decline, moving averages, new highs, and volatility</span></a>
     <a class="card library" href="library.html"><strong>Research library</strong><span>Studies and the Hong Kong dividend pages</span></a>
     <a class="card library" href="reports/crash-rebound-double-fade.html"><strong>Crash → rebound → double fade</strong><span>Four-day path after crash, rip, then two down days</span></a>
+    <a class="card library" href="reports/crash-rebound-double-fade.html"><strong>Crash → rebound → double fade</strong><span>Four-day path after crash, rip, then two down days</span></a>
     <a class="card library" href="reports/crash-rebound-fade.html"><strong>Crash → rebound → fade</strong><span>What usually follows a crash, rip, then next-day drop</span></a>
     <a class="card library" href="reports/crash-then-rebound.html"><strong>Crash then huge rebound</strong><span>What usually follows a one-day crash and next-day rip</span></a>
     <a class="card library" href="reports/ma-extension.html"><strong>MA extension — how wide / what next</strong><span>NDX, SPX, SOXX distance below moving averages and forward returns</span></a>
